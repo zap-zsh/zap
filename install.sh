@@ -1,6 +1,6 @@
 #!/bin/sh
 
-git clone https://github.com/Pheon-Dev/zap.git "$HOME/.local/share/zap"
+git clone https://github.com/zap-zsh/zap.git "$HOME/.local/share/zap"
 
 mkdir "$HOME/.local/share/zap/plugins"
 

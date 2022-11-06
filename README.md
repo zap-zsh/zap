@@ -33,7 +33,7 @@ Zap is a minimal `zsh` plugin manager
 ## Install
 
 ```sh
-sh <(curl -s https://raw.githubusercontent.com/Pheon-Dev/zap/master/install.sh)
+sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.sh)
 ```
 
 ## Uninstall
