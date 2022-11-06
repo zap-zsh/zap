@@ -71,11 +71,6 @@ zapcmp "esc/conda-zsh-completion" false
 <a href="https://github.com/zap-zsh"><img src="https://user-images.githubusercontent.com/696094/196835284-c52d4bd1-7034-439e-848b-47d4f2933dff.svg" width="64" height="64" alt="Github Logo"/></a> <img src="assets/misc/transparent.png" height="1" width="5"/> <a href="https://discord.gg/Xb9B4Ny"><img src="https://user-images.githubusercontent.com/696094/196835282-f5c47d66-29b7-4210-9ee0-d9cdecde3559.svg" width="64" height="64" alt="Discord Logo"/></a> <img src="assets/misc/transparent.png" height="1" width="5"/> <a href="https://twitter.com/chrisatmachine"><img src="https://user-images.githubusercontent.com/696094/196835281-52617611-ede6-40da-a4bc-8c5025622bbf.svg" width="64" height="64" alt="Twitter Logo"/></a> <img src="assets/misc/transparent.png" height="1" width="5"/> <a href="https://reddit.com/r/Lunarvim"><img src="https://user-images.githubusercontent.com/696094/196835278-041a4f99-28e1-4a93-8e35-c8912f1089fc.svg" width="64" height="64" alt="Reddit Logo"/></a>
 </p>
 
-[Contribute]: https://github.com/LunarVim/LunarVim/blob/master/CONTRIBUTING.md
-[Install]: https://www.lunarvim.org/docs/installation
-[Troubleshoot]: https://www.lunarvim.org/docs/troubleshooting
-[Configure]: https://www.lunarvim.org/docs/configuration
-
 ## Thanks to all contributors
 
 <a href="https://github.com/zap-zsh/zap/graphs/contributors">
