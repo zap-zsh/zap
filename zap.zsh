@@ -9,7 +9,7 @@ function zapsource() {
 function zapplug() {
     PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
     if [ ! -d "$HOME/.local/share/zap/plugins/$PLUGIN_NAME" ]; then
-      echo "Installing $PLUGIN_NAME ..." && git clone "https://github.com/$1.git" "$HOME/.local/share/zap/plugins/$PLUGIN_NAME" > /dev/null 2>&1 && echo "Installed $PLUGIN_NAME  " || echo "Failed to install : $PLUGIN_NAME"
+      echo "Installing $PLUGIN_NAME ..." && git clone "https://github.com/$1.git" "$HOME/.local/share/zap/plugins/$PLUGIN_NAME" > /dev/null 2>&1 && echo " $PLUGIN_NAME " || echo "Failed to install : $PLUGIN_NAME"
     fi
     zapsource "$HOME/.local/share/zap/plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
     zapsource "$HOME/.local/share/zap/plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
