@@ -1,6 +1,14 @@
-# ⚡Zap
 
-<div align="center"><p>
+<div align="center">
+
+![lunarvim_logo_dark](https://user-images.githubusercontent.com/29136904/200199028-7facb011-6003-4722-b044-3cdbf7f033e0.png)
+
+</div>
+
+
+<div align="center">
+
+<p>
     <a href="https://github.com/zap-zsh/zap/releases/latest">
       <img alt="Latest release" src="https://img.shields.io/github/v/release/zap-zsh/zap?style=for-the-badge&logo=starship&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41" />
     </a>
