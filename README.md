@@ -34,7 +34,7 @@
       <img alt="follow on Twitter" src="https://img.shields.io/twitter/follow/chrisatmachine?style=for-the-badge&logo=twitter&color=8aadf3&logoColor=D9E0EE&labelColor=302D41" />
     </a>
 
-Zap is a minimal `zsh` plugin manager
+:zap: Zap is a minimal `zsh` plugin manager
 
 </div>
 
