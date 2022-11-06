@@ -12,7 +12,8 @@ function zapplug() {
         git clone "https://github.com/$1.git" "$HOME/.local/share/zap/plugins/$PLUGIN_NAME"
     fi
     zapsource "$HOME/.local/share/zap/plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
-    zapsource "$HOME/.local/share/zap/plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+    zapsource "$HOME/.local/share/zap/plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh" || \
+    zapsource "$HOME/.local/share/zap/plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh-theme"
 }
 
 # For completions
