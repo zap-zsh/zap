@@ -9,8 +9,8 @@ function zapplug() {
     PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
     if [ -d "$HOME/.config/zsh/plugins/$PLUGIN_NAME" ]; then 
         # For plugins
-        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
-        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+        zapsource "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
+        zapsource "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
     else
         git clone "https://github.com/$1.git" "$HOME/.config/zsh/plugins/$PLUGIN_NAME"
     fi
@@ -22,7 +22,7 @@ function zapcmp() {
         # For completions
 		completion_file_path=$(ls $HOME/.config/zsh/plugins/$PLUGIN_NAME/_*)
 		fpath+="$(dirname "${completion_file_path}")"
-        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh"
+        zapsource "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh"
     else
         git clone "https://github.com/$1.git" "$HOME/.config/zsh/plugins/$PLUGIN_NAME"
 		fpath+=$(ls $HOME/.config/zsh/plugins/$PLUGIN_NAME/_*)
