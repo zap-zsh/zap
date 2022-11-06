@@ -69,6 +69,9 @@ zapplug "zsh-users/zsh-syntax-highlighting"
 zapplug "hlissner/zsh-autopair"
 zapplug "zap-zsh/vim"
 
+# Example theme
+zapplug "zap-zsh/zap-prompt"
+
 # Example install completion
 zapcmp "esc/conda-zsh-completion" false
 ```
