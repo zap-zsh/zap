@@ -50,16 +50,6 @@ sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.sh)
 rm -rf ~/.local/share/zap
 ```
 
-## Notes
-
-Will only work with plugins that are named conventionally, this means that the plugin file is the same name as the repository with the following extensions:
-
-- `.plugin.zsh`
-- `.zsh`
-- `.zsh-theme`
-
-For example: [vim](https://github.com/zap-zsh/vim) 
-
 ## Example usage
 
 ```sh
@@ -75,6 +65,17 @@ zapplug "zap-zsh/zap-prompt"
 # Example install completion
 zapcmp "esc/conda-zsh-completion" false
 ```
+
+## Notes
+
+Will only work with plugins that are named conventionally, this means that the plugin file is the same name as the repository with the following extensions:
+
+- `.plugin.zsh`
+- `.zsh`
+- `.zsh-theme`
+
+For example: [vim](https://github.com/zap-zsh/vim) 
+
 
 <!----------------------------------------------------------------------------->
 
