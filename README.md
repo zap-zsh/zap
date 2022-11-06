@@ -11,7 +11,7 @@ sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.sh)
 ## Uninstall
 
 ```sh
-rm -rf .local/share/zsh
+rm -rf ~/.local/share/zsh
 ```
 
 ## Notes
