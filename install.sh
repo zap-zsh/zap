@@ -19,5 +19,6 @@ function run_scripts {
     fi
 }
 
-echo
+echo "..."
+run_scripts
 echo " Zapped"
