@@ -1,6 +1,6 @@
 #!/bin/sh
 
-run_scripts() {
+main() {
     git clone https://github.com/zap-zsh/zap.git "$HOME/.local/share/zap" > /dev/null 2>&1
     mkdir -p "$HOME/.local/share/zap/plugins"
 
@@ -19,5 +19,5 @@ run_scripts() {
 }
 
 echo "..."
-run_scripts
+main
 echo " Zapped"
