@@ -12,6 +12,7 @@ function run_scripts {
     else
         zshrc="$HOME/.zshrc"
     fi
+    touch "$zshrc"
 
     # shellcheck disable=SC2016
     if ! grep -q '[ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"' "$zshrc"; then
