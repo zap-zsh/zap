@@ -5,6 +5,7 @@ export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
 
 # Function to source files if they exist
 function zapsource() {
+    # shellcheck disable=SC1090
     [ -f "$1" ] && source "$1"
 }
 
