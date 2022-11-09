@@ -16,8 +16,12 @@ function zapplug() {
     local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
     local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
     if [ ! -d "$plugin_dir" ]; then
-      echo "Installing $plugin_name ..." && git clone "https://github.com/${full_plugin_name}.git" \
-        "$plugin_dir" > /dev/null 2>&1 && echo " $plugin_name " || echo "Failed to install : $plugin_name"
+        git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            echo "Failed to install $plugin_name"
+            exit 1
+        fi
+        echo " $plugin_name"
     fi
     _try_source "$plugin_dir/$plugin_name.plugin.zsh"
     _try_source "$plugin_dir/$plugin_name.zsh"
