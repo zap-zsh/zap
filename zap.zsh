@@ -39,3 +39,24 @@ function zapcmp() {
     local completion_file="$(basename "${completion_file_path}")"
     [ "$initialize_completion" = true ] && compinit "${completion_file:1}"
 }
+
+update () {
+      ls -1 "$ZAP_PLUGIN_DIR"
+      echo -n "Enter One of the plugins to update: ";
+      read plugin;
+      cd "$ZAP_PLUGIN_DIR/$plugin" && echo "Updating $plugin ..." && git pull > /dev/null 2>&1 && - && echo "Updated $plugin " || echo "Failed to update : $plugin"
+}
+
+delete () {
+      ls -1 "$ZAP_PLUGIN_DIR"
+      echo -n "Enter One of the plugins to delete: ";
+      read plugin;
+      cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && - && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
+}
+
+function zap() {
+    local command="$1"
+    local option="$2"
+    $command || echo "Command $1 not found"
+}
+

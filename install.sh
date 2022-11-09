@@ -18,6 +18,5 @@ main() {
     fi
 }
 
-echo "..."
 main
 echo " Zapped"
