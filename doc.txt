@@ -1,0 +1,9 @@
+zap [options]
+
+OPTIONS:
+    -h        help
+    -v        version
+    update    update plugin(s)
+    delete    delete plugin(s)
+    pause     pause plugin(s)
+    unpause   unpause plugin(s)
