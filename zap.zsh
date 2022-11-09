@@ -4,7 +4,7 @@ export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
 
 # Function to source files if they exist
-function zapsource() {
+function _try_source() {
     # shellcheck disable=SC1090
     [ -f "$1" ] && source "$1"
 }
@@ -18,9 +18,9 @@ function zapplug() {
       echo "Installing $plugin_name ..." && git clone "https://github.com/${full_plugin_name}.git" \
         "$ZAP_PLUGIN_DIR/$plugin_name" > /dev/null 2>&1 && echo " $plugin_name " || echo "Failed to install : $plugin_name"
     fi
-    zapsource "$ZAP_PLUGIN_DIR/$plugin_name/$plugin_name.plugin.zsh" || \
-    zapsource "$ZAP_PLUGIN_DIR/$plugin_name/$plugin_name.zsh" || \
-    zapsource "$ZAP_PLUGIN_DIR/$plugin_name/$plugin_name.zsh-theme"
+    _try_source "$ZAP_PLUGIN_DIR/$plugin_name/$plugin_name.plugin.zsh"
+    _try_source "$ZAP_PLUGIN_DIR/$plugin_name/$plugin_name.zsh"
+    _try_source "$ZAP_PLUGIN_DIR/$plugin_name/$plugin_name.zsh-theme"
     local completion_file_path=$(ls $ZAP_PLUGIN_DIR/$plugin_name/_*)
     if [ -f "$completion_file_path" ]; then
         fpath+=$(ls $ZAP_PLUGIN_DIR/$plugin_name/_*)
