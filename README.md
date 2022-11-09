@@ -54,6 +54,7 @@ rm -rf ~/.local/share/zap
 
 ```sh
 # Example install plugins
+zapplug "zap-zsh/supercharge"
 zapplug "zsh-users/zsh-autosuggestions"
 zapplug "zsh-users/zsh-syntax-highlighting"
 zapplug "hlissner/zsh-autopair"
