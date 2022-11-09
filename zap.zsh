@@ -42,21 +42,27 @@ function zapcmp() {
 
 update () {
       ls -1 "$ZAP_PLUGIN_DIR"
-      echo -n "Enter One of the plugins to update: ";
+
+      echo -n "Enter one of the plugins to update or (a) for All: ";
       read plugin;
-      cd "$ZAP_PLUGIN_DIR/$plugin" && echo "Updating $plugin ..." && git pull > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Updated $plugin " || echo "Failed to update : $plugin"
+
+      if [ $plugin="a" ]; then
+        cd "$ZAP_PLUGIN_DIR" && for plug in *; do cd $plug && echo "Updating $plug ..." && git pull > /dev/null 1>&1 && echo "Updated $plug" && cd ..; done
+      else
+        cd "$ZAP_PLUGIN_DIR/$plugin" && echo "Updating $plugin ..." && git pull > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Updated $plugin " || echo "Failed to update : $plugin"
+      fi
 }
+
 
 delete () {
       ls -1 "$ZAP_PLUGIN_DIR"
-      echo -n "Enter One of the plugins to delete: ";
+      echo -n "Enter one of the plugins to delete: ";
       read plugin;
       cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
 }
 
 function zap() {
     local command="$1"
-    local option="$2"
     $command || echo "Command $1 not found"
 }
 
