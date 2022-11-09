@@ -3,13 +3,11 @@
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
 
-# Function to source files if they exist
 function _try_source() {
     # shellcheck disable=SC1090
     [ -f "$1" ] && source "$1"
 }
 
-# For plugins
 function zapplug() {
     local full_plugin_name="$1"
     local initialize_completion="$2"
