@@ -44,14 +44,14 @@ update () {
       ls -1 "$ZAP_PLUGIN_DIR"
       echo -n "Enter One of the plugins to update: ";
       read plugin;
-      cd "$ZAP_PLUGIN_DIR/$plugin" && echo "Updating $plugin ..." && git pull > /dev/null 2>&1 && - && echo "Updated $plugin " || echo "Failed to update : $plugin"
+      cd "$ZAP_PLUGIN_DIR/$plugin" && echo "Updating $plugin ..." && git pull > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Updated $plugin " || echo "Failed to update : $plugin"
 }
 
 delete () {
       ls -1 "$ZAP_PLUGIN_DIR"
       echo -n "Enter One of the plugins to delete: ";
       read plugin;
-      cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && - && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
+      cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
 }
 
 function zap() {
