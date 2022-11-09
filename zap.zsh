@@ -29,9 +29,9 @@ function zapplug() {
     _try_source "$plugin_dir/$plugin_name.zsh-theme"
     local completion_file_path=$(ls $ZAP_PLUGIN_DIR/$plugin_name/_*)
     if [ -f "$completion_file_path" ]; then
-        fpath+=$(ls $plugin_dir/_*)
-        [ -f $ZAP_DIR/.zccompdump ] && $ZAP_DIR/.zccompdump
-        fpath+="$(dirname $plugin_dir)"
+        fpath+=$("$completion_file_path")
+        [ -f "$ZAP_DIR/.zccompdump" ] && "$ZAP_DIR/.zccompdump"
+        fpath+="$(dirname "$plugin_dir")"
         local completion_file="$(basename "$completion_file_path")"
         [ "$initialize_completion" = true ] && compinit "${completion_file:1}"
     fi
