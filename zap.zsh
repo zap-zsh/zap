@@ -42,17 +42,16 @@ function zapcmp() {
 
 update () {
       ls -1 "$ZAP_PLUGIN_DIR"
-
       echo -n "Enter one of the plugins to update or (a) for All: ";
       read plugin;
-
+      pwd=$(pwd)
       if [ $plugin="a" ]; then
         cd "$ZAP_PLUGIN_DIR" && for plug in *; do cd $plug && echo "Updating $plug ..." && git pull > /dev/null 1>&1 && echo "Updated $plug" && cd ..; done
+        cd $pwd
       else
         cd "$ZAP_PLUGIN_DIR/$plugin" && echo "Updating $plugin ..." && git pull > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Updated $plugin " || echo "Failed to update : $plugin"
       fi
 }
-
 
 delete () {
       ls -1 "$ZAP_PLUGIN_DIR"
