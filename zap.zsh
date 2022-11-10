@@ -39,3 +39,43 @@ function zapcmp() {
     local completion_file="$(basename "${completion_file_path}")"
     [ "$initialize_completion" = true ] && compinit "${completion_file:1}"
 }
+
+update () {
+    ls -1 "$ZAP_PLUGIN_DIR"
+    echo -n "Plugin Name or (a) to Update All: ";
+    read plugin;
+    pwd=$(pwd)
+    if [ $plugin="a" ]; then
+      cd "$ZAP_PLUGIN_DIR" && for plug in *; do cd $plug && echo "Updating $plug ..." && git pull > /dev/null 1>&1 && echo "Updated $plug" && cd ..; done
+      cd $pwd
+    else
+      cd "$ZAP_PLUGIN_DIR/$plugin" && echo "Updating $plugin ..." && git pull > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Updated $plugin " || echo "Failed to update : $plugin"
+    fi
+}
+
+delete () {
+    ls -1 "$ZAP_PLUGIN_DIR"
+    echo -n "Plugin Name: ";
+    read plugin;
+    cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
+}
+
+# pause target
+pause() {
+    sed -i '/^zapplug/s/^/#/g' ~/.zshrc
+}
+
+# unpause target
+unpause() {
+    sed -i '/^#zapplug/s/^#//g' ~/.zshrc
+}
+
+Help () {
+  cat "./doc.txt"
+}
+
+function zap() {
+    local command="$1"
+    [[ "$command" == "-h" ]] && Help || $command || echo "$command: command not found"
+}
+
