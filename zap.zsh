@@ -71,7 +71,7 @@ unpause() {
 }
 
 Help () {
-  cat "$ZAP_PLUGIN_DIR/doc.txt"
+  cat "$ZAP_DIR/doc.txt"
 }
 
 function zap() {
