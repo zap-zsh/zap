@@ -76,7 +76,7 @@ pause() {
     if [[ $plugin == "a" ]]; then
       sed -i '/^zapplug/s/^/#/g' ~/.zshrc
     else
-      sed -i "/$plugin/s/^/#/g" ~/.zshrc
+      sed -i "/\/$plugin/s/^/#/g" ~/.zshrc
     fi
 }
 
@@ -88,8 +88,7 @@ unpause() {
     if [[ $plugin == "a" ]]; then
       sed -i '/^#zapplug/s/^#//g' ~/.zshrc
     else
-      # sed -i '/^#zapplug/s/^#//g' ~/.zshrc
-      sed -i "/$plugin/s/^#//g" ~/.zshrc
+      sed -i "/\/$plugin/s/^#//g" ~/.zshrc
     fi
 }
 
