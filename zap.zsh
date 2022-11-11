@@ -47,12 +47,10 @@ delete () {
     cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
 }
 
-# pause target
 pause() {
     sed -i '/^zapplug/s/^/#/g' ~/.zshrc
 }
 
-# unpause target
 unpause() {
     sed -i '/^#zapplug/s/^#//g' ~/.zshrc
 }
@@ -61,8 +59,25 @@ Help () {
   cat "$ZAP_DIR/doc.txt"
 }
 
-function zap() {
-    local command="$1"
-    [[ "$command" == "-h" ]] && Help || $command || echo "$command: command not found"
+Version () {
+  ref=$ZAP_DIR/.git/packed-refs
+  tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags);
+  ver=$(echo $tag | cut -d " " -f 2)
+  echo "⚡Zap Version v$ver" 
 }
 
+function zap() {
+    local command="$1"
+    if [[ "$command" == "-v" ]] || [[ "$command" == "--version" ]]; then
+       Version;
+       return;
+    else
+      if [[ "$command" == "-h" ]] || [[ "$command" == "--help" ]]; then
+        Help;
+        return;
+      else
+       $command
+      fi
+      echo "$command: command not found"
+    fi 
+}

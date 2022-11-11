@@ -2,7 +2,9 @@ zap [options]
 
 OPTIONS:
     -h        help
+    --help    help
     -v        version
+    --version version
     update    update plugin(s)
     delete    delete plugin(s)
     pause     pause plugin(s)
