@@ -63,7 +63,7 @@ Version () {
   ref=$ZAP_DIR/.git/packed-refs
   tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags);
   ver=$(echo $tag | cut -d " " -f 2)
-  echo "Zap Version v$ver" 
+  echo "⚡Zap Version v$ver" 
 }
 
 function zap() {
