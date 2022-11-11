@@ -29,14 +29,35 @@ function zapplug() {
 
 update () {
     ls -1 "$ZAP_PLUGIN_DIR"
+    echo ""
     echo -n "Plugin Name or (a) to Update All: ";
     read plugin;
     pwd=$(pwd)
-    if [ $plugin="a" ]; then
-      cd "$ZAP_PLUGIN_DIR" && for plug in *; do cd $plug && echo "Updating $plug ..." && git pull > /dev/null 1>&1 && echo "Updated $plug" && cd ..; done
+    echo ""
+    if [[ $plugin == "a" ]]; then
+      cd "$ZAP_PLUGIN_DIR"
+       for plug in *; do
+        cd $plug
+        echo "🔌$plug"
+        git pull > /dev/null 1>&1
+        if [ $? -ne 0 ]; then
+            echo "Failed to Update $plug"
+            exit 1
+        fi
+        echo -e "\e[1A\e[K⚡$plug"
+           cd ..;
+         done
       cd $pwd
     else
-      cd "$ZAP_PLUGIN_DIR/$plugin" && echo "Updating $plugin ..." && git pull > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Updated $plugin " || echo "Failed to update : $plugin"
+      cd "$ZAP_PLUGIN_DIR/$plugin"
+        echo "🔌$plugin"
+        git pull > /dev/null 1>&1
+        if [ $? -ne 0 ]; then
+            echo "Failed to Update $plugin"
+            exit 1
+        fi
+        echo -e "\e[1A\e[K⚡$plugin"
+        cd - > /dev/null 2>&1
     fi
 }
 
@@ -47,10 +68,12 @@ delete () {
     cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
 }
 
+# pause target
 pause() {
     sed -i '/^zapplug/s/^/#/g' ~/.zshrc
 }
 
+# unpause target
 unpause() {
     sed -i '/^#zapplug/s/^#//g' ~/.zshrc
 }
@@ -76,8 +99,10 @@ function zap() {
         Help;
         return;
       else
-       $command
+       $command;
+        return;
       fi
       echo "$command: command not found"
     fi 
 }
+
