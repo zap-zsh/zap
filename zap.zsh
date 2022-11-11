@@ -14,14 +14,14 @@ plug() {
         source "$plugin"
     else
         local full_plugin_name="$1"
-        local initialize_completion="$2"
+        local git_ref="$2"
         local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
         local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
             git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
-            if [[ -n $2 ]]; then                                           # check if the second arg of plug exist
-                cd $plugin_dir && git checkout "$2" > /dev/null 2>&1 && cd # checkout the desidered commit
+            if [ -n "$git_ref" ]; then
+                git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1
             fi
             if [ $? -ne 0 ]; then
                 echo "Failed to install $plugin_name"
