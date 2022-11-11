@@ -1,0 +1,5 @@
+[*.*sh]
+shell_variant = bash
+indent_style = space
+indent_size = 4
+space_redirects = true
