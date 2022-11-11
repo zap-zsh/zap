@@ -30,37 +30,39 @@ function zapplug() {
     _try_source "$plugin_dir/$plugin_name.zsh-theme"
 }
 
+function _pull () {
+    echo "🔌$1"
+    git pull > /dev/null 1>&1
+    if [ $? -ne 0 ]; then
+        echo "Failed to Update $1"
+        exit 1
+    fi
+    echo -e "\e[1A\e[K⚡$1"
+}
+
 update () {
     ls -1 "$ZAP_PLUGIN_DIR"
     echo ""
-    echo -n "Plugin Name or (a) to Update All: ";
+    echo "Plugin Name / (a) for All Plugins / (self) for Zap Itself: "
     read plugin;
     pwd=$(pwd)
     echo ""
     if [[ $plugin == "a" ]]; then
-      cd "$ZAP_PLUGIN_DIR"
-       for plug in *; do
-        cd $plug
-        echo "🔌$plug"
-        git pull > /dev/null 1>&1
-        if [ $? -ne 0 ]; then
-            echo "Failed to Update $plug"
-            exit 1
-        fi
-        echo -e "\e[1A\e[K⚡$plug"
-           cd ..;
-         done
-      cd $pwd
+        cd "$ZAP_PLUGIN_DIR"
+        for plug in *; do
+            cd $plug
+            _pull $plug
+            cd ..;
+        done
+        cd $pwd
+    elif [[ $plugin == "self" ]]; then
+        cd "$ZAP_PLUGIN_DIR"
+        _pull 'zap'
+        cd $pwd
     else
-      cd "$ZAP_PLUGIN_DIR/$plugin"
-        echo "🔌$plugin"
-        git pull > /dev/null 1>&1
-        if [ $? -ne 0 ]; then
-            echo "Failed to Update $plugin"
-            exit 1
-        fi
-        echo -e "\e[1A\e[K⚡$plugin"
-        cd - > /dev/null 2>&1
+        cd "$ZAP_PLUGIN_DIR/$plugin"
+        _pull $plug
+        cd $pwd
     fi
 }
 
