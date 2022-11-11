@@ -3,31 +3,30 @@
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
 
-function _try_source() {
-    # shellcheck disable=SC1090
-    [ -f "$1" ] && source "$1"
-}
-
 function plug() {
-    local full_plugin_name="$1"
-    local initialize_completion="$2"
-    local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
-    local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
-    if [ ! -d "$plugin_dir" ]; then
-        echo "🔌$plugin_name"
-        git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
-        if [[ ! -z $2 ]]; then                                              # check if the second arg of plug exist
-            cd $plugin_dir && git checkout "$2" > /dev/null 2>&1 && cd      # checkout the desidered commit
-        fi
-        if [ $? -ne 0 ]; then
-            echo "Failed to install $plugin_name"
-            exit 1
-        fi
-        echo -e "\e[1A\e[K⚡$plugin_name"
-    fi
-    _try_source "$plugin_dir/$plugin_name.plugin.zsh"
-    _try_source "$plugin_dir/$plugin_name.zsh"
-    _try_source "$plugin_dir/$plugin_name.zsh-theme"
+	plugin="$1"
+    if [ -f "$plugin" ]; then
+		source "$plugin"
+	else
+		local full_path="${ZAP_PLUGIN_DIR}/${plugin}"
+		local plugin_dir="$(dirname $full_path)"
+		local plugin_name="$(basename $full_path)"
+		if [ ! -d "$full_path" ]; then
+			echo "🔌$plugin_name"
+			git clone "https://github.com/${plugin}.git" "$full_path" > /dev/null 2>&1
+			if [[ ! -z $2 ]]; then                                              # check if the second arg of zapplug exist
+				cd $plugin_dir && git checkout "$2" > /dev/null 2>&1 && cd      # checkout the desidered commit
+			fi
+			if [ $? -ne 0 ]; then
+				echo "Failed to install $plugin_name"
+				exit 1
+			fi
+			echo -e "\e[1A\e[K⚡$plugin_name"
+		fi
+		source "${full_path}/${plugin_name}.zsh" > /dev/null 2>&1 || \
+		source "${full_path}/${plugin_name}.plugin.zsh" > /dev/null 2>&1 || \
+		source "${full_path}/${plugin_name}.zsh-theme" > /dev/null 2>&1 
+	fi
 }
 
 function _pull () {
@@ -79,7 +78,7 @@ pause() {
     echo -n "Plugin Name or (a) to Update All: ";
     read plugin;
     if [[ $plugin == "a" ]]; then
-      sed -i '/^plug/s/^/#/g' ~/.zshrc
+      sed -i '/^zapplug/s/^/#/g' ~/.zshrc
     else
       sed -i "/\/$plugin/s/^/#/g" ~/.zshrc
     fi
@@ -91,7 +90,7 @@ unpause() {
     echo -n "Plugin Name or (a) to Update All: ";
     read plugin;
     if [[ $plugin == "a" ]]; then
-      sed -i '/^#plug/s/^#//g' ~/.zshrc
+      sed -i '/^#zapplug/s/^#//g' ~/.zshrc
     else
       sed -i "/\/$plugin/s/^#//g" ~/.zshrc
     fi
