@@ -130,3 +130,4 @@ zap() {
     fi 
 }
 
+# vim: ft=bash ts=4 et
