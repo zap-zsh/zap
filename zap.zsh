@@ -8,7 +8,7 @@ function _try_source() {
     [ -f "$1" ] && source "$1"
 }
 
-function zapplug() {
+function plug() {
     local full_plugin_name="$1"
     local initialize_completion="$2"
     local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)

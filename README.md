@@ -54,17 +54,17 @@ rm -rf ~/.local/share/zap
 
 ```sh
 # Example install plugins
-zapplug "zap-zsh/supercharge"
-zapplug "zsh-users/zsh-autosuggestions"
-zapplug "zsh-users/zsh-syntax-highlighting"
-zapplug "hlissner/zsh-autopair"
-zapplug "zap-zsh/vim"
+plug "zap-zsh/supercharge"
+plug "zsh-users/zsh-autosuggestions"
+plug "zsh-users/zsh-syntax-highlighting"
+plug "hlissner/zsh-autopair"
+plug "zap-zsh/vim"
 
 # Example theme
-zapplug "zap-zsh/zap-prompt"
+plug "zap-zsh/zap-prompt"
 
 # Example install completion
-zapplug "esc/conda-zsh-completion"
+plug "esc/conda-zsh-completion"
 ```
 
 ## Notes
