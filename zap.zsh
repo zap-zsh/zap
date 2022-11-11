@@ -16,7 +16,7 @@ function plug() {
     if [ ! -d "$plugin_dir" ]; then
         echo "🔌$plugin_name"
         git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
-        if [[ ! -z $2 ]]; then                                              # check if the second arg of zapplug exist
+        if [[ ! -z $2 ]]; then                                              # check if the second arg of plug exist
             cd $plugin_dir && git checkout "$2" > /dev/null 2>&1 && cd      # checkout the desidered commit
         fi
         if [ $? -ne 0 ]; then
@@ -79,7 +79,7 @@ pause() {
     echo -n "Plugin Name or (a) to Update All: ";
     read plugin;
     if [[ $plugin == "a" ]]; then
-      sed -i '/^zapplug/s/^/#/g' ~/.zshrc
+      sed -i '/^plug/s/^/#/g' ~/.zshrc
     else
       sed -i "/\/$plugin/s/^/#/g" ~/.zshrc
     fi
@@ -91,7 +91,7 @@ unpause() {
     echo -n "Plugin Name or (a) to Update All: ";
     read plugin;
     if [[ $plugin == "a" ]]; then
-      sed -i '/^#zapplug/s/^#//g' ~/.zshrc
+      sed -i '/^#plug/s/^#//g' ~/.zshrc
     else
       sed -i "/\/$plugin/s/^#//g" ~/.zshrc
     fi
