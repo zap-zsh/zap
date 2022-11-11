@@ -71,14 +71,28 @@ delete () {
     cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
 }
 
-# pause target
 pause() {
-    sed -i '/^zapplug/s/^/#/g' ~/.zshrc
+    ls -1 "$ZAP_PLUGIN_DIR"
+    echo ""
+    echo -n "Plugin Name or (a) to Update All: ";
+    read plugin;
+    if [[ $plugin == "a" ]]; then
+      sed -i '/^zapplug/s/^/#/g' ~/.zshrc
+    else
+      sed -i "/\/$plugin/s/^/#/g" ~/.zshrc
+    fi
 }
 
-# unpause target
 unpause() {
-    sed -i '/^#zapplug/s/^#//g' ~/.zshrc
+    ls -1 "$ZAP_PLUGIN_DIR"
+    echo ""
+    echo -n "Plugin Name or (a) to Update All: ";
+    read plugin;
+    if [[ $plugin == "a" ]]; then
+      sed -i '/^#zapplug/s/^#//g' ~/.zshrc
+    else
+      sed -i "/\/$plugin/s/^#//g" ~/.zshrc
+    fi
 }
 
 Help () {
