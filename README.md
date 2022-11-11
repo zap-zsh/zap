@@ -64,7 +64,7 @@ zapplug "zap-zsh/vim"
 zapplug "zap-zsh/zap-prompt"
 
 # Example install completion
-zapplug "esc/conda-zsh-completion" false
+zapplug "esc/conda-zsh-completion"
 ```
 
 ## Notes
