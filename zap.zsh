@@ -16,6 +16,9 @@ function zapplug() {
     if [ ! -d "$plugin_dir" ]; then
         echo "🔌$plugin_name"
         git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
+        if [[ ! -z $2 ]]; then                                              # check if the second arg of zapplug exist
+            cd $plugin_dir && git checkout "$2" > /dev/null 2>&1 && cd      # checkout the desidered commit
+        fi
         if [ $? -ne 0 ]; then
             echo "Failed to install $plugin_name"
             exit 1
