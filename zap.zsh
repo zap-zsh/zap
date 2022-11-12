@@ -74,8 +74,11 @@ update() {
 }
 
 delete() {
-    ls -1 "$ZAP_PLUGIN_DIR"; echo -n "Plugin Name: "; read plugin
-    cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    echo "$plugins"; echo ""; echo -n "🔌 Plugin Number: "; read plugin; pwd=$(pwd); echo "";
+    for plug in $plugins; do
+      selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5"/"$6 }'); rm -rf $ZAP_PLUGIN_DIR/$selected;
+    done
 }
 
 pause() {
