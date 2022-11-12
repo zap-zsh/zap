@@ -72,7 +72,7 @@ _zap_update() {
         cd $pwd
     else
         for plug in $plugins; do
-            selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            selected=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
             cd "$ZAP_PLUGIN_DIR/$selected"
             _pull $selected
             cd - > /dev/null 2>&1
@@ -81,14 +81,14 @@ _zap_update() {
 }
 
 _zap_remove() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number: "
     read plugin
     pwd=$(pwd)
     for plug in $plugins; do
-        usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
-        plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+        usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+        plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
         sed -i'.backup' "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC
         rm -rf $ZAP_PLUGIN_DIR/$plg && echo "Deleted $plg" || echo "Failed to Delete $plg"
     done
@@ -104,8 +104,8 @@ _zap_deactivate() {
         sed -i'.backup' '/^plug/s/^/#\ /g' $ZAP_ZSHRC
     else
         for plug in $plugins; do
-            usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
-            plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+            plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
             sed -i'.backup' "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC
         done
     fi
@@ -121,8 +121,8 @@ _zap_activate() {
         sed -i'.backup' '/^#\ plug/s/^#\ //g' $ZAP_ZSHRC
     else
         for plug in $plugins; do
-            usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
-            plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+            plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
             sed -i'.backup' "/$usr\/$plg/s/^#\ //g" $ZAP_ZSHRC
         done
     fi
