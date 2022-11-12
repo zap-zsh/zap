@@ -50,7 +50,7 @@ _pull() {
     echo -e "\e[1A\e[K⚡$1"
 }
 
-update() {
+_zap_update() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo -e " 0  ⚡ Zap"
     echo "$plugins \n"
@@ -80,7 +80,7 @@ update() {
     fi
 }
 
-remove() {
+_zap_remove() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number: "
@@ -94,7 +94,7 @@ remove() {
     done
 }
 
-deactivate() {
+_zap_deactivate() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins: "
@@ -111,7 +111,7 @@ deactivate() {
     fi
 }
 
-activate() {
+_zap_activate() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^#plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) Plug All: "
@@ -128,11 +128,11 @@ activate() {
     fi
 }
 
-help() {
+_zap_help() {
     cat "$ZAP_DIR/doc.txt"
 }
 
-version() {
+_zap_version() {
     ref=$ZAP_DIR/.git/packed-refs
     tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags)
     ver=$(echo $tag | cut -d " " -f 2)
@@ -141,18 +141,18 @@ version() {
 
 typeset -A opts
 opts=(
-    -a "activate"
-    --activate "activate"
-    -d "deactivate"
-    --deactivate "deactivate"
-    -h "help"
-    --help "help"
-    -r "remove"
-    --remove "remove"
-    -u "update"
-    --update "update"
-    -v "version"
-    --version "version"
+  -a               "_zap_activate"
+  --activate       "_zap_activate"
+  -d               "_zap_deactivate"
+  --deactivate     "_zap_deactivate"
+  -h               "_zap_help"
+  --help           "_zap_help"
+  -r               "_zap_remove"
+  --remove      "_zap_remove"
+  -u               "_zap_update"
+  --update         "_zap_update"
+  -v               "_zap_version"
+  --version        "_zap_version"
 )
 
 zap() {
