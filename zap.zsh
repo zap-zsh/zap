@@ -112,7 +112,7 @@ _zap_deactivate() {
 }
 
 _zap_activate() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^#plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $4 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^# plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $4 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) Plug All: "
     read plugin
