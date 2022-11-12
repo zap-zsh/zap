@@ -37,17 +37,17 @@ plug() {
 }
 
 _pull() {
-        echo "🔌$1"
-        git pull > /dev/null 2>&1
-        if [ $? -ne 0 ]; then
-            echo "Failed to Update $1"
-            exit 1
-        fi
-        echo -e "\e[1A\e[K⚡$1"
+    echo "🔌$1"
+    git pull > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Failed to Update $1"
+        exit 1
+    fi
+    echo -e "\e[1A\e[K⚡$1"
 }
 
 update() {
-  plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo -e " 0  ⚡ Zap"
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
@@ -77,7 +77,7 @@ update() {
 }
 
 delete() {
-  plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number: "
     read plugin
@@ -85,7 +85,7 @@ delete() {
     for plug in $plugins; do
         usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
         plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
+        sed -i "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
         rm -rf $ZAP_PLUGIN_DIR/$plg && echo "Deleted $plg" || echo "Failed to Delete $plg"
     done
 }
