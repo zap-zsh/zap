@@ -50,8 +50,8 @@ _pull() {
     echo -e "\e[1A\e[K⚡$1"
 }
 
-update() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+_zap_update() {
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo -e " 0  ⚡ Zap"
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
@@ -72,7 +72,7 @@ update() {
         cd $pwd
     else
         for plug in $plugins; do
-            selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            selected=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
             cd "$ZAP_PLUGIN_DIR/$selected"
             _pull $selected
             cd - > /dev/null 2>&1
@@ -80,80 +80,89 @@ update() {
     fi
 }
 
-delete() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+_zap_remove() {
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number: "
     read plugin
     pwd=$(pwd)
     for plug in $plugins; do
-        usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
-        plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-        sed -i'.backup' "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
-        rm -rf $ZAP_PLUGIN_DIR/$plg && echo "Deleted $plg" || echo "Failed to Delete $plg"
+        usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+        plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+        sed -i'.backup' "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC
+        rm -rf $ZAP_PLUGIN_DIR/$plg && echo "Removed $usr's $plg plugin" || echo "Failed to Remove $usr's $plg plugin \n"
     done
 }
 
-pause() {
+_zap_deactivate() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins: "
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i'.backup' '/^plug/s/^/#/g' $ZAP_ZSHRC
+        sed -i'.backup' '/^plug/s/^/#\ /g' $ZAP_ZSHRC && echo "Deactivated all active plugins" || echo "Failed to Deactivate all active plugins \n"
     else
         for plug in $plugins; do
-            usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
-            plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i'.backup' "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
+            usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+            plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            sed -i'.backup' "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC && echo "Deactivated $usr's $plg plugin" || echo "Failed to Deactivate $usr's $plg plugin \n"
         done
     fi
 }
 
-unpause() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^#plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+_zap_activate() {
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^# plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $4 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) Plug All: "
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i'.backup' '/^#plug/s/^#//g' $ZAP_ZSHRC
+        sed -i'.backup' '/^#\ plug/s/^#\ //g' $ZAP_ZSHRC && echo "Activated all inactive plugins" || echo "Failed to Activate all inactive plugins \n"
     else
         for plug in $plugins; do
-            usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
-            plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i'.backup' "/$usr\/$plg/s/^#//g" $ZAP_ZSHRC
+            usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+            plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            sed -i'.backup' "/$usr\/$plg/s/^#\ //g" $ZAP_ZSHRC && echo "Activated $usr's $plg plugin" || echo "Failed to Activate $usr's $plg plugin \n"
         done
     fi
 }
 
-help() {
+_zap_help() {
     cat "$ZAP_DIR/doc.txt"
 }
 
-version() {
+_zap_version() {
     ref=$ZAP_DIR/.git/packed-refs
     tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags)
     ver=$(echo $tag | cut -d " " -f 2)
     echo "\n ⚡Zap Version v$ver \n"
 }
 
+typeset -A opts
+opts=(
+    -a "_zap_activate"
+    --activate "_zap_activate"
+    -d "_zap_deactivate"
+    --deactivate "_zap_deactivate"
+    -h "_zap_help"
+    --help "_zap_help"
+    -r "_zap_remove"
+    --remove "_zap_remove"
+    -u "_zap_update"
+    --update "_zap_update"
+    -v "_zap_version"
+    --version "_zap_version"
+)
+
 zap() {
-    local command="$1"
-    if [[ $command == "-v" ]] || [[ $command == "--version" ]]; then
-        version
-        return
-    else
-        if [[ $command == "-h" ]] || [[ $command == "--help" ]]; then
-            help
-            return
-        else
-            $command
-            return
-        fi
-        echo "$command: command not found"
+    emulate -L zsh
+    if [[ -z "$opts[$1]" ]]; then
+        _zap_help
+        return 1
     fi
+    opt="${opts[$1]}"
+    $opt
 }
 
 # vim: ft=bash ts=4 et
