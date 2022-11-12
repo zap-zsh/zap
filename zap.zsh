@@ -93,7 +93,7 @@ delete() {
 pause() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
-    echo -n "🔌 Plugin Number: "
+    echo -n "🔌 Plugin Number | (a) All Plugins: "
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
