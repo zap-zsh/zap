@@ -141,18 +141,18 @@ _zap_version() {
 
 typeset -A opts
 opts=(
-  -a               "_zap_activate"
-  --activate       "_zap_activate"
-  -d               "_zap_deactivate"
-  --deactivate     "_zap_deactivate"
-  -h               "_zap_help"
-  --help           "_zap_help"
-  -r               "_zap_remove"
-  --remove      "_zap_remove"
-  -u               "_zap_update"
-  --update         "_zap_update"
-  -v               "_zap_version"
-  --version        "_zap_version"
+    -a "_zap_activate"
+    --activate "_zap_activate"
+    -d "_zap_deactivate"
+    --deactivate "_zap_deactivate"
+    -h "_zap_help"
+    --help "_zap_help"
+    -r "_zap_remove"
+    --remove "_zap_remove"
+    -u "_zap_update"
+    --update "_zap_update"
+    -v "_zap_version"
+    --version "_zap_version"
 )
 
 zap() {
