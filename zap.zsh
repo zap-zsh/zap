@@ -80,7 +80,7 @@ update() {
     fi
 }
 
-terminate() {
+remove() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number: "
@@ -139,31 +139,31 @@ version() {
     echo "\n ⚡Zap Version v$ver \n"
 }
 
-typeset -A opts 
+typeset -A opts
 opts=(
-  -h               "help"
-  -v               "version"
-  -a               "activate"
-  -d               "deactivate"
-  -t               "terminate"
-  -u               "update"
-  --help           "help"
-  --version        "version"
-  --activate       "activate"
-  --deactivate     "deactivate"
-  --terminate      "terminate"
-  --update         "update"
+    -h "help"
+    -v "version"
+    -a "activate"
+    -d "deactivate"
+    -r "remove"
+    -u "update"
+    --help "help"
+    --version "version"
+    --activate "activate"
+    --deactivate "deactivate"
+    --remove "terminate"
+    --update "update"
 )
 
 zap() {
-  emulate -L zsh
-  if [[ -z "$opts[$1]" ]]; then
-    echo "$1: invalid option"
-    return 1
-  else
-    opt="${opts[$1]}"
-    $opt
-  fi
+    emulate -L zsh
+    if [[ -z "$opts[$1]" ]]; then
+        echo "$1: invalid option"
+        return 1
+    else
+        opt="${opts[$1]}"
+        $opt
+    fi
 }
 
 # vim: ft=bash ts=4 et
