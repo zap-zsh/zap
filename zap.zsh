@@ -59,14 +59,13 @@ update() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins"; echo ""; echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "; read plugin; pwd=$(pwd); echo "";
     if [[ $plugin == "a" ]]; then
-        cd "$ZAP_PLUGIN_DIR"
-        for plug in *; do
-            cd $plug; _pull $plug;
-        cd "$ZAP_PLUGIN_DIR"
-        done
+      cd "$ZAP_PLUGIN_DIR"
+      for plug in *; do
+        cd $plug; _pull $plug; cd "$ZAP_PLUGIN_DIR";
+      done
       cd $pwd > /dev/null 2>&1
-    elif [[ $plugin == " 0" ]]; then
-        cd "$ZAP_PLUGIN_DIR"; _pull 'zap'; cd $pwd
+    elif [[ $plugin == "0" ]]; then
+        cd "$ZAP_DIR"; _pull 'zap'; cd $pwd
     else
       for plug in $plugins; do
         selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5"/"$6 }'); cd "$ZAP_PLUGIN_DIR/$selected"; _pull $selected; cd - > /dev/null 2>&1
