@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC1090
 
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
@@ -29,7 +30,6 @@ plug() {
             echo -e "\e[1A\e[K⚡$plugin_name"
         fi
         local full_path="$plugin_dir/$plugin$name"
-        # shellcheck disable=SC1090
         [[ -f "$full_path.plugin.zsh" ]] && source "$full_path.plugin.zsh"
         [[ -f "$full_path.zsh" ]] && source "$full_path.zsh"
         [[ -f "$full_path.zsh-theme" ]] && source "$full_path.zsh-theme"
