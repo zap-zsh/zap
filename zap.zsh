@@ -63,8 +63,7 @@ _pull() {
 update() {
     echo -e " 0  ⚡ Zap"
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
-    echo "$plugins"
-    echo ""
+    echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
     read plugin
     pwd=$(pwd)
@@ -93,12 +92,10 @@ update() {
 
 delete() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
-    echo "$plugins"
-    echo ""
+    echo "$plugins \n"
     echo -n "🔌 Plugin Number: "
     read plugin
     pwd=$(pwd)
-    echo ""
     for plug in $plugins; do
         selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5"/"$6 }')
         rm -rf $ZAP_PLUGIN_DIR/$selected
@@ -106,26 +103,36 @@ delete() {
 }
 
 pause() {
-    ls -1 "$ZAP_PLUGIN_DIR"
-    echo ""
-    echo -n "Plugin Name or (a) to Update All: "
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    echo "$plugins \n"
+    echo -n "🔌 Plugin Number: "
     read plugin
+    echo ""
     if [[ $plugin == "a" ]]; then
         sed -i '/^plug/s/^/#/g' $ZDOTDIR/.zshrc
     else
-        sed -i "/\/$plugin/s/^/#/g" $ZDOTDIR/.zshrc
+        for plug in $plugins; do
+            usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+            plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            sed -i "/$usr\/$plg/s/^/#/g" $ZDOTDIR/.zshrc
+        done
     fi
 }
 
 unpause() {
-    ls -1 "$ZAP_PLUGIN_DIR"
-    echo ""
-    echo -n "Plugin Name or (a) to Update All: "
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E '^#plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    echo "$plugins \n"
+    echo -n "🔌 Plugin Number | (a) Plug All: "
     read plugin
+    echo ""
     if [[ $plugin == "a" ]]; then
         sed -i '/^#plug/s/^#//g' $ZDOTDIR/.zshrc
     else
-        sed -i "/\/$plugin/s/^#//g" $ZDOTDIR/.zshrc
+        for plug in $plugins; do
+            usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+            plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            sed -i "/$usr\/$plg/s/^#//g" $ZDOTDIR/.zshrc
+        done
     fi
 }
 
@@ -137,7 +144,7 @@ version() {
     ref=$ZAP_DIR/.git/packed-refs
     tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags)
     ver=$(echo $tag | cut -d " " -f 2)
-    echo "⚡Zap Version v$ver"
+    echo "\n ⚡Zap Version v$ver \n"
 }
 
 zap() {
