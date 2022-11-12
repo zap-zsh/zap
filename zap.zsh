@@ -80,7 +80,7 @@ update() {
     fi
 }
 
-delete() {
+terminate() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number: "
@@ -94,7 +94,7 @@ delete() {
     done
 }
 
-pause() {
+deactivate() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins: "
@@ -111,7 +111,7 @@ pause() {
     fi
 }
 
-unpause() {
+activate() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^#plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) Plug All: "
@@ -139,21 +139,31 @@ version() {
     echo "\n ⚡Zap Version v$ver \n"
 }
 
+typeset -A opts 
+opts=(
+  -h               "help"
+  -v               "version"
+  -a               "activate"
+  -d               "deactivate"
+  -t               "terminate"
+  -u               "update"
+  --help           "help"
+  --version        "version"
+  --activate       "activate"
+  --deactivate     "deactivate"
+  --terminate      "terminate"
+  --update         "update"
+)
+
 zap() {
-    local command="$1"
-    if [[ $command == "-v" ]] || [[ $command == "--version" ]]; then
-        version
-        return
-    else
-        if [[ $command == "-h" ]] || [[ $command == "--help" ]]; then
-            help
-            return
-        else
-            $command
-            return
-        fi
-        echo "$command: command not found"
-    fi
+  emulate -L zsh
+  if [[ -z "$opts[$1]" ]]; then
+    echo "$1: invalid option"
+    return 1
+  else
+    opt="${opts[$1]}"
+    $opt
+  fi
 }
 
 # vim: ft=bash ts=4 et
