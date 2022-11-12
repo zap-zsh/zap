@@ -2,7 +2,11 @@
 
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
-export ZAP_ZSHRC=$ZDOTDIR/.zshrc # ~/.zshrc
+if [ -z "$ZDOTDIR" ]; then 
+    export ZAP_ZSHRC=$HOME/.zshrc # ~/.zshrc
+else
+    export ZAP_ZSHRC=$ZDOTDIR/.zshrc
+fi
 
 _try_source() {
     # shellcheck disable=SC1090
