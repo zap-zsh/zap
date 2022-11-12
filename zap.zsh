@@ -158,7 +158,7 @@ opts=(
 zap() {
     emulate -L zsh
     if [[ -z "$opts[$1]" ]]; then
-        echo "$1: invalid option"
+        _zap_help
         return 1
     else
         opt="${opts[$1]}"
