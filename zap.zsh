@@ -3,23 +3,17 @@
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
 
-_try_source() {
-    # shellcheck disable=SC1090
-    [ -f "$1" ] && source "$1"
-}
-
 plug() {
     plugin="$1"
     if [ -f "$plugin" ]; then
         source "$plugin"
     else
-        local full_plugin_name="$1"
         local git_ref="$2"
-        local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
+        local plugin_name=$(echo "$plugin" | cut -d "/" -f 2)
         local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
-            git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
+            git clone "https://github.com/${plugin}.git" "$plugin_dir" > /dev/null 2>&1
             if [ -n "$git_ref" ]; then
                 git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1
             fi
@@ -29,9 +23,11 @@ plug() {
             fi
             echo -e "\e[1A\e[K⚡$plugin_name"
         fi
-        _try_source "$plugin_dir/$plugin_name.plugin.zsh"
-        _try_source "$plugin_dir/$plugin_name.zsh"
-        _try_source "$plugin_dir/$plugin_name.zsh-theme"
+        local full_path="$plugin_dir/$plugin$name"
+        # shellcheck disable=SC1090
+        [[ -f "$full_path.plugin.zsh" ]] && source "$full_path.plugin.zsh"
+        [[ -f "$full_path.zsh" ]] && source "$full_path.zsh"
+        [[ -f "$full_path.zsh-theme" ]] && source "$full_path.zsh-theme"
     fi
 }
 
