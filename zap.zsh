@@ -160,10 +160,9 @@ zap() {
     if [[ -z "$opts[$1]" ]]; then
         _zap_help
         return 1
-    else
-        opt="${opts[$1]}"
-        $opt
     fi
+    opt="${opts[$1]}"
+    $opt
 }
 
 # vim: ft=bash ts=4 et
