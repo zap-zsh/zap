@@ -26,12 +26,11 @@ plug() {
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
             git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
+            if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
+
             if [ -n "$git_ref" ]; then
                 git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1
-            fi
-            if [ $? -ne 0 ]; then
-                echo "Failed to install $plugin_name"
-                exit 1
+                if [ $? -ne 0 ]; then echo "Failed to checkout $git_ref" && return 1; fi
             fi
             echo -e "\e[1A\e[K⚡$plugin_name"
         fi
@@ -44,10 +43,7 @@ plug() {
 _pull() {
     echo "🔌$1"
     git pull > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        echo "Failed to Update $1"
-        exit 1
-    fi
+    if [ $? -ne 0 ]; then echo "Failed to update $1" && exit 1; fi
     echo -e "\e[1A\e[K⚡$1"
 }
 
