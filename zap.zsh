@@ -2,6 +2,7 @@
 
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
+export ZAP_ZSHRC=$ZDOTDIR/.zshrc # ~/.zshrc
 
 _try_source() {
     # shellcheck disable=SC1090
@@ -36,8 +37,6 @@ plug() {
 }
 
 _pull() {
-    _is_repo=$(ls .git > /dev/null 2>&1 && echo "T" || echo "F")
-    if [[ $_is_repo == "T" ]]; then
         echo "🔌$1"
         git pull > /dev/null 2>&1
         if [ $? -ne 0 ]; then
@@ -45,24 +44,10 @@ _pull() {
             exit 1
         fi
         echo -e "\e[1A\e[K⚡$1"
-    else
-        for plug in *; do
-            cd $plug
-            echo "🔌$plug"
-            git pull > /dev/null 2>&1
-            if [ $? -ne 0 ]; then
-                echo "Failed to Update $plug"
-                exit 1
-            fi
-            echo -e "\e[1A\e[K⚡$plug"
-            cd "$ZAP_PLUGIN_DIR/$1"
-        done
-    fi
 }
 
-plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
-
 update() {
+  plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo -e " 0  ⚡ Zap"
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
@@ -83,7 +68,7 @@ update() {
         cd $pwd
     else
         for plug in $plugins; do
-            selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5"/"$6 }')
+            selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
             cd "$ZAP_PLUGIN_DIR/$selected"
             _pull $selected
             cd - > /dev/null 2>&1
@@ -92,46 +77,49 @@ update() {
 }
 
 delete() {
+  plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number: "
     read plugin
     pwd=$(pwd)
     for plug in $plugins; do
-        selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5"/"$6 }')
-        rm -rf $ZAP_PLUGIN_DIR/$selected
+        usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+        plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            sed -i "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
+        rm -rf $ZAP_PLUGIN_DIR/$plg && echo "Deleted $plg" || echo "Failed to Delete $plg"
     done
 }
 
 pause() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number: "
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i '/^plug/s/^/#/g' $ZDOTDIR/.zshrc
+        sed -i '/^plug/s/^/#/g' $ZAP_ZSHRC
     else
         for plug in $plugins; do
             usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
             plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i "/$usr\/$plg/s/^/#/g" $ZDOTDIR/.zshrc
+            sed -i "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
         done
     fi
 }
 
 unpause() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E '^#plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^#plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) Plug All: "
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i '/^#plug/s/^#//g' $ZDOTDIR/.zshrc
+        sed -i '/^#plug/s/^#//g' $ZAP_ZSHRC
     else
         for plug in $plugins; do
             usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
             plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i "/$usr\/$plg/s/^#//g" $ZDOTDIR/.zshrc
+            sed -i "/$usr\/$plg/s/^#//g" $ZAP_ZSHRC
         done
     fi
 }
