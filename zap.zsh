@@ -84,9 +84,9 @@ pause() {
     echo -n "Plugin Name or (a) to Update All: "
     read plugin
     if [[ $plugin == "a" ]]; then
-        sed -i '/^plug/s/^/#/g' ~/.zshrc
+        sed -i '/^plug/s/^/#/g' $ZDOTDIR/.zshrc
     else
-        sed -i "/\/$plugin/s/^/#/g" ~/.zshrc
+        sed -i "/\/$plugin/s/^/#/g" $ZDOTDIR/.zshrc
     fi
 }
 
@@ -96,9 +96,9 @@ unpause() {
     echo -n "Plugin Name or (a) to Update All: "
     read plugin
     if [[ $plugin == "a" ]]; then
-        sed -i '/^#plug/s/^#//g' ~/.zshrc
+        sed -i '/^#plug/s/^#//g' $ZDOTDIR/.zshrc
     else
-        sed -i "/\/$plugin/s/^#//g" ~/.zshrc
+        sed -i "/\/$plugin/s/^#//g" $ZDOTDIR/.zshrc
     fi
 }
 
