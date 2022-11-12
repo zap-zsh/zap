@@ -2,6 +2,11 @@
 
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
+if [ -z "$ZDOTDIR" ]; then
+    export ZAP_ZSHRC=$HOME/.zshrc # ~/.zshrc
+else
+    export ZAP_ZSHRC=$ZDOTDIR/.zshrc
+fi
 
 plug() {
     plugin="$1"
@@ -33,7 +38,7 @@ plug() {
 
 _pull() {
     echo "🔌$1"
-    git pull > /dev/null 1>&1
+    git pull > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         echo "Failed to Update $1"
         exit 1
@@ -42,9 +47,10 @@ _pull() {
 }
 
 update() {
-    ls -1 "$ZAP_PLUGIN_DIR"
-    echo ""
-    echo "Plugin Name / (a) for All Plugins / (self) for Zap Itself: "
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    echo -e " 0  ⚡ Zap"
+    echo "$plugins \n"
+    echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
     read plugin
     pwd=$(pwd)
     echo ""
@@ -53,70 +59,90 @@ update() {
         for plug in *; do
             cd $plug
             _pull $plug
-            cd ..
+            cd "$ZAP_PLUGIN_DIR"
         done
-        cd $pwd
-    elif [[ $plugin == "self" ]]; then
-        cd "$ZAP_PLUGIN_DIR"
+        cd $pwd > /dev/null 2>&1
+    elif [[ $plugin == "0" ]]; then
+        cd "$ZAP_DIR"
         _pull 'zap'
         cd $pwd
     else
-        cd "$ZAP_PLUGIN_DIR/$plugin"
-        _pull $plug
-        cd $pwd
+        for plug in $plugins; do
+            selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            cd "$ZAP_PLUGIN_DIR/$selected"
+            _pull $selected
+            cd - > /dev/null 2>&1
+        done
     fi
 }
 
 delete() {
-    ls -1 "$ZAP_PLUGIN_DIR"
-    echo -n "Plugin Name: "
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    echo "$plugins \n"
+    echo -n "🔌 Plugin Number: "
     read plugin
-    cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
+    pwd=$(pwd)
+    for plug in $plugins; do
+        usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+        plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+        sed -i'.backup' "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
+        rm -rf $ZAP_PLUGIN_DIR/$plg && echo "Deleted $plg" || echo "Failed to Delete $plg"
+    done
 }
 
 pause() {
-    ls -1 "$ZAP_PLUGIN_DIR"
-    echo ""
-    echo -n "Plugin Name or (a) to Update All: "
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    echo "$plugins \n"
+    echo -n "🔌 Plugin Number | (a) All Plugins: "
     read plugin
+    echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i '/^plug/s/^/#/g' $ZDOTDIR/.zshrc
+        sed -i'.backup' '/^plug/s/^/#/g' $ZAP_ZSHRC
     else
-        sed -i "/\/$plugin/s/^/#/g" $ZDOTDIR/.zshrc
+        for plug in $plugins; do
+            usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+            plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            sed -i'.backup' "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
+        done
     fi
 }
 
 unpause() {
-    ls -1 "$ZAP_PLUGIN_DIR"
-    echo ""
-    echo -n "Plugin Name or (a) to Update All: "
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^#plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    echo "$plugins \n"
+    echo -n "🔌 Plugin Number | (a) Plug All: "
     read plugin
+    echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i '/^#plug/s/^#//g' $ZDOTDIR/.zshrc
+        sed -i'.backup' '/^#plug/s/^#//g' $ZAP_ZSHRC
     else
-        sed -i "/\/$plugin/s/^#//g" $ZDOTDIR/.zshrc
+        for plug in $plugins; do
+            usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+            plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
+            sed -i'.backup' "/$usr\/$plg/s/^#//g" $ZAP_ZSHRC
+        done
     fi
 }
 
-Help() {
+help() {
     cat "$ZAP_DIR/doc.txt"
 }
 
-Version() {
+version() {
     ref=$ZAP_DIR/.git/packed-refs
     tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags)
     ver=$(echo $tag | cut -d " " -f 2)
-    echo "⚡Zap Version v$ver"
+    echo "\n ⚡Zap Version v$ver \n"
 }
 
 zap() {
     local command="$1"
     if [[ $command == "-v" ]] || [[ $command == "--version" ]]; then
-        Version
+        version
         return
     else
         if [[ $command == "-h" ]] || [[ $command == "--help" ]]; then
-            Help
+            help
             return
         else
             $command
