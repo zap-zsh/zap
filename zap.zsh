@@ -89,7 +89,7 @@ delete() {
     for plug in $plugins; do
         usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
         plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-        sed -i "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
+        sed -i'.backup' "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
         rm -rf $ZAP_PLUGIN_DIR/$plg && echo "Deleted $plg" || echo "Failed to Delete $plg"
     done
 }
@@ -101,12 +101,12 @@ pause() {
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i '/^plug/s/^/#/g' $ZAP_ZSHRC
+        sed -i'.backup' '/^plug/s/^/#/g' $ZAP_ZSHRC
     else
         for plug in $plugins; do
             usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
             plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
+            sed -i'.backup' "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
         done
     fi
 }
@@ -118,12 +118,12 @@ unpause() {
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i '/^#plug/s/^#//g' $ZAP_ZSHRC
+        sed -i'.backup' '/^#plug/s/^#//g' $ZAP_ZSHRC
     else
         for plug in $plugins; do
             usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
             plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i "/$usr\/$plg/s/^#//g" $ZAP_ZSHRC
+            sed -i'.backup' "/$usr\/$plg/s/^#//g" $ZAP_ZSHRC
         done
     fi
 }
@@ -157,3 +157,4 @@ zap() {
 }
 
 # vim: ft=bash ts=4 et
+
