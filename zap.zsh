@@ -51,7 +51,7 @@ _pull() {
 }
 
 update() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo -e " 0  ⚡ Zap"
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
@@ -89,7 +89,7 @@ remove() {
     for plug in $plugins; do
         usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
         plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-        sed -i'.backup' "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
+        sed -i'.backup' "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC
         rm -rf $ZAP_PLUGIN_DIR/$plg && echo "Deleted $plg" || echo "Failed to Delete $plg"
     done
 }
@@ -101,12 +101,12 @@ deactivate() {
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i'.backup' '/^plug/s/^/#/g' $ZAP_ZSHRC
+        sed -i'.backup' '/^plug/s/^/#\ /g' $ZAP_ZSHRC
     else
         for plug in $plugins; do
             usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
             plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i'.backup' "/$usr\/$plg/s/^/#/g" $ZAP_ZSHRC
+            sed -i'.backup' "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC
         done
     fi
 }
@@ -118,12 +118,12 @@ activate() {
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i'.backup' '/^#plug/s/^#//g' $ZAP_ZSHRC
+        sed -i'.backup' '/^#\ plug/s/^#\ //g' $ZAP_ZSHRC
     else
         for plug in $plugins; do
             usr=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5 }')
             plg=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i'.backup' "/$usr\/$plg/s/^#//g" $ZAP_ZSHRC
+            sed -i'.backup' "/$usr\/$plg/s/^#\ //g" $ZAP_ZSHRC
         done
     fi
 }
