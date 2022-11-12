@@ -36,45 +36,46 @@ plug() {
 }
 
 _pull() {
-    echo "🔌$1"
-    git pull > /dev/null 1>&1
-    if [ $? -ne 0 ]; then
-        echo "Failed to Update $1"
-        exit 1
+    _is_repo=$(ls .git > /dev/null 2>&1 && echo "T" || echo "F")
+    if [[ $_is_repo == "T" ]]; then
+      echo "🔌$1"; git pull > /dev/null 2>&1
+      if [ $? -ne 0 ]; then
+          echo "Failed to Update $1"; exit 1
+      fi
+      echo -e "\e[1A\e[K⚡$1";
+    else
+      for plug in *; do
+        cd $plug; echo "🔌$plug"; git pull > /dev/null 2>&1;
+        if [ $? -ne 0 ]; then
+            echo "Failed to Update $plug"; exit 1
+        fi
+        echo -e "\e[1A\e[K⚡$plug"; cd "$ZAP_PLUGIN_DIR/$1";
+      done
     fi
-    echo -e "\e[1A\e[K⚡$1"
 }
 
 update() {
-    ls -1 "$ZAP_PLUGIN_DIR"
-    echo ""
-    echo "Plugin Name / (a) for All Plugins / (self) for Zap Itself: "
-    read plugin
-    pwd=$(pwd)
-    echo ""
+    echo -e " 0  ⚡ Zap"
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    echo "$plugins"; echo ""; echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "; read plugin; pwd=$(pwd); echo "";
     if [[ $plugin == "a" ]]; then
         cd "$ZAP_PLUGIN_DIR"
         for plug in *; do
-            cd $plug
-            _pull $plug
-            cd ..
-        done
-        cd $pwd
-    elif [[ $plugin == "self" ]]; then
+            cd $plug; _pull $plug;
         cd "$ZAP_PLUGIN_DIR"
-        _pull 'zap'
-        cd $pwd
+        done
+      cd $pwd > /dev/null 2>&1
+    elif [[ $plugin == " 0" ]]; then
+        cd "$ZAP_PLUGIN_DIR"; _pull 'zap'; cd $pwd
     else
-        cd "$ZAP_PLUGIN_DIR/$plugin"
-        _pull $plug
-        cd $pwd
+      for plug in $plugins; do
+        selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5"/"$6 }'); cd "$ZAP_PLUGIN_DIR/$selected"; _pull $selected; cd - > /dev/null 2>&1
+      done
     fi
 }
 
 delete() {
-    ls -1 "$ZAP_PLUGIN_DIR"
-    echo -n "Plugin Name: "
-    read plugin
+    ls -1 "$ZAP_PLUGIN_DIR"; echo -n "Plugin Name: "; read plugin
     cd "$ZAP_PLUGIN_DIR" && echo "Deleting $plugin ..." && rm -rf $plugin > /dev/null 2>&1 && cd - > /dev/null 2>&1 && echo "Deleted $plugin " || echo "Failed to delete : $plugin"
 }
 
