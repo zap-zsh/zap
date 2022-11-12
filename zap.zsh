@@ -141,18 +141,18 @@ version() {
 
 typeset -A opts
 opts=(
-    -h "help"
-    -v "version"
     -a "activate"
-    -d "deactivate"
-    -r "remove"
-    -u "update"
-    --help "help"
-    --version "version"
     --activate "activate"
+    -d "deactivate"
     --deactivate "deactivate"
-    --remove "terminate"
+    -h "help"
+    --help "help"
+    -r "remove"
+    --remove "remove"
+    -u "update"
     --update "update"
+    -v "version"
+    --version "version"
 )
 
 zap() {

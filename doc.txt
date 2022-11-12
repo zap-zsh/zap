@@ -1,9 +1,9 @@
 zap [options]
 
 OPTIONS:
-    -h, --help      help
-    -v, --version   version
-    update          update plugin(s)
-    delete          delete plugin(s)
-    pause           pause plugin(s)
-    unpause         unpause plugin(s)
+    -h, --help        help
+    -v, --version     version
+    -u, --update      update plugin(s)
+    -a, --activate    activate plugin(s)
+    -d, --deactivate  deactivate plugin(s)
+    -r, --remove      remove plugin(s)
