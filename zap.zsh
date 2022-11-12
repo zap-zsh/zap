@@ -38,46 +38,70 @@ plug() {
 _pull() {
     _is_repo=$(ls .git > /dev/null 2>&1 && echo "T" || echo "F")
     if [[ $_is_repo == "T" ]]; then
-      echo "🔌$1"; git pull > /dev/null 2>&1
-      if [ $? -ne 0 ]; then
-          echo "Failed to Update $1"; exit 1
-      fi
-      echo -e "\e[1A\e[K⚡$1";
-    else
-      for plug in *; do
-        cd $plug; echo "🔌$plug"; git pull > /dev/null 2>&1;
+        echo "🔌$1"
+        git pull > /dev/null 2>&1
         if [ $? -ne 0 ]; then
-            echo "Failed to Update $plug"; exit 1
+            echo "Failed to Update $1"
+            exit 1
         fi
-        echo -e "\e[1A\e[K⚡$plug"; cd "$ZAP_PLUGIN_DIR/$1";
-      done
+        echo -e "\e[1A\e[K⚡$1"
+    else
+        for plug in *; do
+            cd $plug
+            echo "🔌$plug"
+            git pull > /dev/null 2>&1
+            if [ $? -ne 0 ]; then
+                echo "Failed to Update $plug"
+                exit 1
+            fi
+            echo -e "\e[1A\e[K⚡$plug"
+            cd "$ZAP_PLUGIN_DIR/$1"
+        done
     fi
 }
 
 update() {
     echo -e " 0  ⚡ Zap"
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
-    echo "$plugins"; echo ""; echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "; read plugin; pwd=$(pwd); echo "";
+    echo "$plugins"
+    echo ""
+    echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
+    read plugin
+    pwd=$(pwd)
+    echo ""
     if [[ $plugin == "a" ]]; then
-      cd "$ZAP_PLUGIN_DIR"
-      for plug in *; do
-        cd $plug; _pull $plug; cd "$ZAP_PLUGIN_DIR";
-      done
-      cd $pwd > /dev/null 2>&1
+        cd "$ZAP_PLUGIN_DIR"
+        for plug in *; do
+            cd $plug
+            _pull $plug
+            cd "$ZAP_PLUGIN_DIR"
+        done
+        cd $pwd > /dev/null 2>&1
     elif [[ $plugin == "0" ]]; then
-        cd "$ZAP_DIR"; _pull 'zap'; cd $pwd
+        cd "$ZAP_DIR"
+        _pull 'zap'
+        cd $pwd
     else
-      for plug in $plugins; do
-        selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5"/"$6 }'); cd "$ZAP_PLUGIN_DIR/$selected"; _pull $selected; cd - > /dev/null 2>&1
-      done
+        for plug in $plugins; do
+            selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5"/"$6 }')
+            cd "$ZAP_PLUGIN_DIR/$selected"
+            _pull $selected
+            cd - > /dev/null 2>&1
+        done
     fi
 }
 
 delete() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZDOTDIR/.zshrc | grep -E 'plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
-    echo "$plugins"; echo ""; echo -n "🔌 Plugin Number: "; read plugin; pwd=$(pwd); echo "";
+    echo "$plugins"
+    echo ""
+    echo -n "🔌 Plugin Number: "
+    read plugin
+    pwd=$(pwd)
+    echo ""
     for plug in $plugins; do
-      selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5"/"$6 }'); rm -rf $ZAP_PLUGIN_DIR/$selected;
+        selected=$(echo $plug | grep $plugin | awk 'BEGIN { FS = "[ /]" } { print $5"/"$6 }')
+        rm -rf $ZAP_PLUGIN_DIR/$selected
     done
 }
 
@@ -105,11 +129,11 @@ unpause() {
     fi
 }
 
-Help() {
+help() {
     cat "$ZAP_DIR/doc.txt"
 }
 
-Version() {
+version() {
     ref=$ZAP_DIR/.git/packed-refs
     tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags)
     ver=$(echo $tag | cut -d " " -f 2)
@@ -119,11 +143,11 @@ Version() {
 zap() {
     local command="$1"
     if [[ $command == "-v" ]] || [[ $command == "--version" ]]; then
-        Version
+        version
         return
     else
         if [[ $command == "-h" ]] || [[ $command == "--help" ]]; then
-            Help
+            help
             return
         else
             $command
