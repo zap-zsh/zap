@@ -2,7 +2,7 @@
 
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
-if [ -z "$ZDOTDIR" ]; then 
+if [ -z "$ZDOTDIR" ]; then
     export ZAP_ZSHRC=$HOME/.zshrc # ~/.zshrc
 else
     export ZAP_ZSHRC=$ZDOTDIR/.zshrc
