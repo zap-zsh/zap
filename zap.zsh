@@ -60,14 +60,18 @@ _zap_clean() {
             unused_plugins+=("$plugin_name")
         fi
     done
-    for p in ${unused_plugins[@]}; do
-        echo -n "Remove: $p? (y/n): "
-        read answer
-        if [[ $answer == "y" ]]; then
-            rm -rf "$HOME/.local/share/zap/plugins/$p"
-            echo "removed: $p"
-        fi
-    done
+    if [ ${#unused_plugins[@]} -eq 0 ]; then
+        echo "Nothing to remove"
+    else
+        for p in ${unused_plugins[@]}; do
+            echo -n "Remove: $p? (y/n): "
+            read answer
+            if [[ $answer == "y" ]]; then
+                rm -rf "$HOME/.local/share/zap/plugins/$p"
+                echo "removed: $p"
+            fi
+        done
+    fi
 }
 
 _zap_update() {
