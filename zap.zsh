@@ -39,8 +39,7 @@ plug() {
         _try_source "$plugin_dir/$plugin_name.zsh"
         _try_source "$plugin_dir/$plugin_name.zsh-theme"
     fi
-    # append active plugin
-    if [[ -n "$full_plugin_name" ]]; then
+    if [[ -n $full_plugin_name ]]; then
         echo "$full_plugin_name" >> "$HOME/.local/share/zap/installed_plugins"
     fi
 }
@@ -135,4 +134,3 @@ zap() {
 }
 
 # vim: ft=bash ts=4 et
-
