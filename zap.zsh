@@ -46,7 +46,7 @@ plug() {
 }
 
 _pull() {
-    echo "🔌$1"
+    echo "🔌 $1"
     git pull > /dev/null 2>&1
     if [ $? -ne 0 ]; then echo "Failed to update $1" && exit 1; fi
     echo -e "\e[1A\e[K⚡$1"
@@ -61,7 +61,7 @@ _zap_clean() {
         fi
     done
     if [ ${#unused_plugins[@]} -eq 0 ]; then
-        echo "Nothing to remove"
+        echo "✅ Nothing to remove"
     else
         for p in ${unused_plugins[@]}; do
             echo -n "Remove: $p? (y/n): "
@@ -115,7 +115,7 @@ _zap_version() {
     ref=$ZAP_DIR/.git/packed-refs
     tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags)
     ver=$(echo $tag | cut -d " " -f 2)
-    echo "\n ⚡Zap Version v$ver \n"
+    echo "⚡Zap Version v$ver"
 }
 
 typeset -A opts
