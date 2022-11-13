@@ -83,6 +83,10 @@ _zap_update() {
 
 _zap_remove() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    if [ -z $plugins ]; then
+        echo "There are no plugins"
+        return 0
+    fi
     echo "$plugins \n"
     echo -n "🔌 Plugin Number: "
     read plugin
@@ -97,6 +101,10 @@ _zap_remove() {
 
 _zap_deactivate() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    if [ -z $plugins ]; then
+        echo "There is no plugin to deactivate"
+        return 0
+    fi
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins: "
     read plugin
@@ -114,6 +122,10 @@ _zap_deactivate() {
 
 _zap_activate() {
     plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^# plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $4 }')
+    if [ -z $plugins ]; then
+        echo "All plugins are active"
+        return 0
+    fi
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) Plug All: "
     read plugin
