@@ -55,12 +55,8 @@ _zap_clean() {
     unused_plugins=()
     for i in "$HOME"/.local/share/zap/plugins/*; do
         local plugin_name=$(basename "$i")
-        # echo "plugin name: $plugin_name"
-        # echo "i: $i"
         if ! grep -q "$plugin_name" "$HOME/.local/share/zap/installed_plugins"; then
             unused_plugins+=("$plugin_name")
-            # the next line is commented out.  Test it.  Then uncomment to removed the files
-            # rm "$i"
         fi
     done
     for p in ${unused_plugins[@]}; do
