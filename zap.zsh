@@ -26,12 +26,11 @@ plug() {
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
             git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
+            if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
+
             if [ -n "$git_ref" ]; then
                 git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1
-            fi
-            if [ $? -ne 0 ]; then
-                echo "Failed to install $plugin_name"
-                exit 1
+                if [ $? -ne 0 ]; then echo "Failed to checkout $git_ref" && return 1; fi
             fi
             echo -e "\e[1A\e[K⚡$plugin_name"
         fi
@@ -44,15 +43,12 @@ plug() {
 _pull() {
     echo "🔌$1"
     git pull > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        echo "Failed to Update $1"
-        exit 1
-    fi
+    if [ $? -ne 0 ]; then echo "Failed to update $1" && exit 1; fi
     echo -e "\e[1A\e[K⚡$1"
 }
 
 _zap_update() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "[Aa0-Zz9]' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     echo -e " 0  ⚡ Zap"
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
@@ -82,7 +78,7 @@ _zap_update() {
 }
 
 _zap_remove() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "[Aa0-Zz9]' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     if [ -z $plugins ]; then
         echo "There are no plugins"
         return 0
@@ -100,7 +96,7 @@ _zap_remove() {
 }
 
 _zap_deactivate() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "[Aa0-Zz9]' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
     if [ -z $plugins ]; then
         echo "There is no plugin to deactivate"
         return 0
@@ -121,7 +117,7 @@ _zap_deactivate() {
 }
 
 _zap_activate() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^# plug "' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $4 }')
+    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^# plug "[Aa0-Zz9]' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $4 }')
     if [ -z $plugins ]; then
         echo "All plugins are active"
         return 0
