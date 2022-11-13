@@ -1,12 +1,13 @@
 #!/bin/sh
 # shellcheck disable=SC1090
 
+rm -rf "$HOME/.local/share/zap/installed_plugins"
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
 if [ -z "$ZDOTDIR" ]; then
-    export ZAP_ZSHRC=$HOME/.zshrc # ~/.zshrc
+    export ZAP_ZSHRC="$HOME/.zshrc" # ~/.zshrc
 else
-    export ZAP_ZSHRC=$ZDOTDIR/.zshrc
+    export ZAP_ZSHRC="$ZDOTDIR/.zshrc"
 fi
 
 _try_source() {
@@ -38,6 +39,10 @@ plug() {
         _try_source "$plugin_dir/$plugin_name.zsh"
         _try_source "$plugin_dir/$plugin_name.zsh-theme"
     fi
+    # append active plugin
+    if [[ -n "$full_plugin_name" ]]; then
+        echo "$full_plugin_name" >> "$HOME/.local/share/zap/installed_plugins"
+    fi
 }
 
 _pull() {
@@ -48,7 +53,7 @@ _pull() {
 }
 
 _zap_update() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "[Aa0-Zz9]' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
+    plugins=$(cat "$HOME/.local/share/zap/installed_plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
     echo -e " 0  ⚡ Zap"
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
@@ -75,54 +80,27 @@ _zap_update() {
             cd - > /dev/null 2>&1
         done
     fi
-}
 
-_zap_remove() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "[Aa0-Zz9]' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
-    echo "$plugins \n"
-    echo -n "🔌 Plugin Number: "
-    read plugin
-    pwd=$(pwd)
-    for plug in $plugins; do
-        usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
-        plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-        sed -i'.backup' "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC
-        rm -rf $ZAP_PLUGIN_DIR/$plg && echo "Removed $usr's $plg plugin" || echo "Failed to Remove $usr's $plg plugin \n"
+    unused_plugins=()
+    for i in "$HOME"/.local/share/zap/plugins/*; do
+        local plugin_name=$(basename "$i")
+        # echo "plugin name: $plugin_name"
+        # echo "i: $i"
+        if ! grep -q "$plugin_name" "$HOME/.local/share/zap/installed_plugins"; then
+            unused_plugins+=("$plugin_name")
+            # the next line is commented out.  Test it.  Then uncomment to removed the files
+            # rm "$i"
+        fi
+
     done
-}
-
-_zap_deactivate() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^plug "[Aa0-Zz9]' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $3 }')
-    echo "$plugins \n"
-    echo -n "🔌 Plugin Number | (a) All Plugins: "
-    read plugin
-    echo ""
-    if [[ $plugin == "a" ]]; then
-        sed -i'.backup' '/^plug/s/^/#\ /g' $ZAP_ZSHRC && echo "Deactivated all active plugins" || echo "Failed to Deactivate all active plugins \n"
-    else
-        for plug in $plugins; do
-            usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
-            plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i'.backup' "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC && echo "Deactivated $usr's $plg plugin" || echo "Failed to Deactivate $usr's $plg plugin \n"
-        done
-    fi
-}
-
-_zap_activate() {
-    plugins=$(awk 'BEGIN { FS = "[ plug]" } { print }' $ZAP_ZSHRC | grep -E '^# plug "[Aa0-Zz9]' | awk 'BEGIN { FS = "[ \"]" } { print " " int((NR)) echo "  🔌 " $4 }')
-    echo "$plugins \n"
-    echo -n "🔌 Plugin Number | (a) Plug All: "
-    read plugin
-    echo ""
-    if [[ $plugin == "a" ]]; then
-        sed -i'.backup' '/^#\ plug/s/^#\ //g' $ZAP_ZSHRC && echo "Activated all inactive plugins" || echo "Failed to Activate all inactive plugins \n"
-    else
-        for plug in $plugins; do
-            usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
-            plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i'.backup' "/$usr\/$plg/s/^#\ //g" $ZAP_ZSHRC && echo "Activated $usr's $plg plugin" || echo "Failed to Activate $usr's $plg plugin \n"
-        done
-    fi
+    for p in ${unused_plugins[@]}; do
+        echo -n "Remove: $p? (y/n): "
+        read answer
+        if [[ $answer == "y" ]]; then
+            rm -rf "$HOME/.local/share/zap/plugins/$p"
+            echo "removed: $p"
+        fi
+    done
 }
 
 _zap_help() {
@@ -138,14 +116,8 @@ _zap_version() {
 
 typeset -A opts
 opts=(
-    -a "_zap_activate"
-    --activate "_zap_activate"
-    -d "_zap_deactivate"
-    --deactivate "_zap_deactivate"
     -h "_zap_help"
     --help "_zap_help"
-    -r "_zap_remove"
-    --remove "_zap_remove"
     -u "_zap_update"
     --update "_zap_update"
     -v "_zap_version"
@@ -163,3 +135,4 @@ zap() {
 }
 
 # vim: ft=bash ts=4 et
+
