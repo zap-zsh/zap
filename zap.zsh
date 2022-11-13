@@ -51,6 +51,28 @@ _pull() {
     echo -e "\e[1A\e[K⚡$1"
 }
 
+_zap_clean() {
+    unused_plugins=()
+    for i in "$HOME"/.local/share/zap/plugins/*; do
+        local plugin_name=$(basename "$i")
+        # echo "plugin name: $plugin_name"
+        # echo "i: $i"
+        if ! grep -q "$plugin_name" "$HOME/.local/share/zap/installed_plugins"; then
+            unused_plugins+=("$plugin_name")
+            # the next line is commented out.  Test it.  Then uncomment to removed the files
+            # rm "$i"
+        fi
+    done
+    for p in ${unused_plugins[@]}; do
+        echo -n "Remove: $p? (y/n): "
+        read answer
+        if [[ $answer == "y" ]]; then
+            rm -rf "$HOME/.local/share/zap/plugins/$p"
+            echo "removed: $p"
+        fi
+    done
+}
+
 _zap_update() {
     plugins=$(cat "$HOME/.local/share/zap/installed_plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
     echo -e " 0  ⚡ Zap"
@@ -79,27 +101,9 @@ _zap_update() {
             cd - > /dev/null 2>&1
         done
     fi
-
-    unused_plugins=()
-    for i in "$HOME"/.local/share/zap/plugins/*; do
-        local plugin_name=$(basename "$i")
-        # echo "plugin name: $plugin_name"
-        # echo "i: $i"
-        if ! grep -q "$plugin_name" "$HOME/.local/share/zap/installed_plugins"; then
-            unused_plugins+=("$plugin_name")
-            # the next line is commented out.  Test it.  Then uncomment to removed the files
-            # rm "$i"
-        fi
-
-    done
-    for p in ${unused_plugins[@]}; do
-        echo -n "Remove: $p? (y/n): "
-        read answer
-        if [[ $answer == "y" ]]; then
-            rm -rf "$HOME/.local/share/zap/plugins/$p"
-            echo "removed: $p"
-        fi
-    done
+    if [[ $ZAP_CLEAN_ON_UPDATE == true ]]; then
+        _zap_clean
+    fi
 }
 
 _zap_help() {
@@ -119,6 +123,8 @@ opts=(
     --help "_zap_help"
     -u "_zap_update"
     --update "_zap_update"
+    -c "_zap_clean"
+    --clean "_zap_clean"
     -v "_zap_version"
     --version "_zap_version"
 )
@@ -134,3 +140,4 @@ zap() {
 }
 
 # vim: ft=bash ts=4 et
+
