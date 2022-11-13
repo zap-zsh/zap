@@ -1,6 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC1090
 
+fpath=(~/.local/share/zap/completion $fpath)
 rm -rf "$HOME/.local/share/zap/installed_plugins"
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
