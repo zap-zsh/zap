@@ -49,7 +49,7 @@ _pull() {
     echo "🔌 $1"
     git pull > /dev/null 2>&1
     if [ $? -ne 0 ]; then echo "Failed to update $1" && exit 1; fi
-    echo -e "\e[1A\e[K⚡$1"
+    echo -e "\e[1A\e[K⚡ $1"
 }
 
 _zap_clean() {
