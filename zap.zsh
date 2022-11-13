@@ -94,7 +94,7 @@ _zap_remove() {
     for plug in $plugins; do
         usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
         plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-        sed -i'.backup' "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC
+        sed -i'.backup' --follow-symlinks "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC
         rm -rf $ZAP_PLUGIN_DIR/$plg && echo "Removed $usr's $plg plugin" || echo "Failed to Remove $usr's $plg plugin \n"
     done
 }
@@ -110,12 +110,12 @@ _zap_deactivate() {
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i'.backup' '/^plug/s/^/#\ /g' $ZAP_ZSHRC && echo "Deactivated all active plugins" || echo "Failed to Deactivate all active plugins \n"
+        sed -i'.backup' --follow-symlinks '/^plug/s/^/#\ /g' $ZAP_ZSHRC && echo "Deactivated all active plugins" || echo "Failed to Deactivate all active plugins \n"
     else
         for plug in $plugins; do
             usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
             plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i'.backup' "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC && echo "Deactivated $usr's $plg plugin" || echo "Failed to Deactivate $usr's $plg plugin \n"
+            sed -i'.backup' --follow-symlinks "/$usr\/$plg/s/^/#\ /g" $ZAP_ZSHRC && echo "Deactivated $usr's $plg plugin" || echo "Failed to Deactivate $usr's $plg plugin \n"
         done
     fi
 }
@@ -131,12 +131,12 @@ _zap_activate() {
     read plugin
     echo ""
     if [[ $plugin == "a" ]]; then
-        sed -i'.backup' '/^#\ plug/s/^#\ //g' $ZAP_ZSHRC && echo "Activated all inactive plugins" || echo "Failed to Activate all inactive plugins \n"
+        sed -i'.backup' --follow-symlinks '/^#\ plug/s/^#\ //g' $ZAP_ZSHRC && echo "Activated all inactive plugins" || echo "Failed to Activate all inactive plugins \n"
     else
         for plug in $plugins; do
             usr=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
             plg=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            sed -i'.backup' "/$usr\/$plg/s/^#\ //g" $ZAP_ZSHRC && echo "Activated $usr's $plg plugin" || echo "Failed to Activate $usr's $plg plugin \n"
+            sed -i'.backup' --follow-symlinks "/$usr\/$plg/s/^#\ //g" $ZAP_ZSHRC && echo "Activated $usr's $plg plugin" || echo "Failed to Activate $usr's $plg plugin \n"
         done
     fi
 }
