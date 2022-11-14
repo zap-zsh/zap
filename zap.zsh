@@ -48,7 +48,7 @@ plug() {
 _pull() {
     echo "🔌 $1"
     git pull > /dev/null 2>&1
-    # if [ $? -ne 0 ]; then echo "Failed to update $1" && exit 1; fi
+    if [ $? -ne 0 ]; then echo "Failed to update $1" && exit 1; fi
     echo -e "\e[1A\e[K⚡ $1"
 }
 
@@ -84,6 +84,7 @@ _zap_update() {
         fi
         cd "$ZAP_PLUGIN_DIR"
     }
+    # plugins=$(cat "$HOME/.local/share/zap/installed_plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
     plugins=$(ls "$HOME/.local/share/zap/plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
     pwd=$(pwd)
     cd "$ZAP_DIR"
@@ -103,6 +104,7 @@ _zap_update() {
         for plug in *; do
             cd $plug
             _pull $plug
+            cd "$ZAP_PLUGIN_DIR"
         done
     elif [[ $plugin == "0" ]]; then
         cd "$ZAP_DIR"
