@@ -44,13 +44,9 @@
 sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.sh)
 ```
 
-## Uninstall
-
-```sh
-rm -rf ~/.local/share/zap
-```
-
 ## Example usage
+
+Add the following to your `.zshrc`
 
 ```sh
 # Example install plugins
@@ -80,6 +76,12 @@ Zap provided commands for updating and cleaning up plugins
   ```sh
   zap --clean
   ```
+
+## Uninstall
+
+```sh
+rm -rf ~/.local/share/zap
+```
 
 ## Notes
 
