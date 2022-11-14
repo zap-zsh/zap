@@ -130,10 +130,8 @@ _zap_help() {
 }
 
 _zap_version() {
-    ref=$ZAP_DIR/.git/packed-refs
-    tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags | tail -1)
-    ver=$(echo $tag | cut -d " " -f 2)
-    echo "⚡Zap Version v$ver"
+    release=$(gh release list --repo https://github.com/zap-zsh/zap | grep -E "Latest")
+    echo "⚡$release"
 }
 
 typeset -A opts
