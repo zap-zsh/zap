@@ -84,7 +84,7 @@ _zap_update() {
             state=$(echo -e "       ... up to date")
             echo -e "\e[32m${state}\e[0m"
         elif [ $LOCAL = $BASE ]; then
-            state=$(echo -e "      ... new changes found, update. \n")
+            state=$(echo -e "      ... new version available, update.")
             echo -e "\e[31m${state}\e[0m"
         fi
         cd "$ZAP_PLUGIN_DIR"
@@ -108,11 +108,11 @@ _zap_update() {
         for plug in *; do
             cd $plug
             _pull $plug
+            cd "$ZAP_PLUGIN_DIR"
         done
     elif [[ $plugin == "0" ]]; then
         cd "$ZAP_DIR"
         _pull 'zap'
-        cd "$ZAP_PLUGIN_DIR"
     else
         cd "$ZAP_PLUGIN_DIR"
         selected=$(echo $plugins | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
