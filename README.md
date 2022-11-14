@@ -57,8 +57,6 @@ rm -rf ~/.local/share/zap
 plug "zap-zsh/supercharge"
 plug "zsh-users/zsh-autosuggestions"
 plug "zsh-users/zsh-syntax-highlighting"
-plug "hlissner/zsh-autopair"
-plug "zap-zsh/vim"
 
 # Example theme
 plug "zap-zsh/zap-prompt"
@@ -66,6 +64,22 @@ plug "zap-zsh/zap-prompt"
 # Example install completion
 plug "esc/conda-zsh-completion"
 ```
+
+## Commands
+
+Zap provided commands for updating and cleaning up plugins
+
+- To update plugins or Zap:
+
+  ```sh
+  zap --update
+  ```
+
+To remove plugins you are no longer using:
+
+  ```sh
+  zap --clean
+  ```
 
 ## Notes
 
@@ -76,28 +90,6 @@ Will only work with plugins that are named conventionally, this means that the p
 - `.zsh-theme`
 
 For example: [vim](https://github.com/zap-zsh/vim)
-
-## Development & CI
-
-Auto formatted code with [`shfmt`](https://github.com/mvdan/sh#shfmt) is required for a pull request to be merged.
-
-Format code:
-
-```bash
-shfmt -l -w .
-```
-
-### pre-commit
-
-To add a formatting check on each commit [pre-commit](https://pre-commit.com/#intro) can be used.
-shfmt via Go is required for pre-commit to work.
-
-Install `pre-commit`:
-
-```bash
-pip install pre-commit
-pre-commit install
-```
 
 <!----------------------------------------------------------------------------->
 
