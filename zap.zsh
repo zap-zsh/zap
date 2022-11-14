@@ -80,22 +80,24 @@ _zap_update() {
         LOCAL=$(git rev-parse @)
         REMOTE=$(git rev-parse "$UPSTREAM")
         BASE=$(git merge-base @ "$UPSTREAM")
-
         if [ $LOCAL = $REMOTE ]; then
-            echo -e "... up to date"
+            state=$(echo -e "       ... up to date")
+            echo -e "\e[32m${state}\e[0m"
         elif [ $LOCAL = $BASE ]; then
-            echo -e "... new changes found, update."
+            state=$(echo -e "      ... new changes found, update. \n")
+            echo -e "\e[31m${state}\e[0m"
         fi
         cd "$ZAP_PLUGIN_DIR"
     }
     plugins=$(ls "$HOME/.local/share/zap/plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
     pwd=$(pwd)
     cd "$ZAP_DIR"
-    echo " 0  ⚡ Zap" | grep -E "Zap"
+    echo " 0  ⚡ Zap"
     _changes
     for plug in *; do
         cd $plug
-        echo -n $plugins | grep "$plug$"
+        show=$(echo -n $plugins | grep "$plug$")
+        echo -e "$show"
         _changes
     done
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
@@ -110,6 +112,7 @@ _zap_update() {
     elif [[ $plugin == "0" ]]; then
         cd "$ZAP_DIR"
         _pull 'zap'
+        cd "$ZAP_PLUGIN_DIR"
     else
         cd "$ZAP_PLUGIN_DIR"
         selected=$(echo $plugins | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
