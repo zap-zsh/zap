@@ -76,20 +76,22 @@ _zap_clean() {
 
 _zap_update() {
     _changes() {
-        count=$(git remote update > /dev/null 2>&1 && git status -uno | grep "modified" | wc -l)
-        mods=$(git remote update > /dev/null 2>&1 && git status -uno | grep "modified" | head -5)
-        if [[ $count -ne 0 ]]; then
-            echo -e "   $mods"
-            echo -e "   ... $count new change(s), update. \n"
+        UPSTREAM=${1:-'@{u}'}
+        LOCAL=$(git rev-parse @)
+        REMOTE=$(git rev-parse "$UPSTREAM")
+        BASE=$(git merge-base @ "$UPSTREAM")
+
+        if [ $LOCAL = $REMOTE ]; then
+            echo -e "... up to date"
+        elif [ $LOCAL = $BASE ]; then
+            echo -e "... new changes found, update."
         fi
         cd "$ZAP_PLUGIN_DIR"
     }
-    # plugins=$(cat "$HOME/.local/share/zap/installed_plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
     plugins=$(ls "$HOME/.local/share/zap/plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
     pwd=$(pwd)
     cd "$ZAP_DIR"
     echo " 0  ⚡ Zap" | grep -E "Zap"
-    git remote update > /dev/null 2>&1 && git status -uno | grep "modified" > /dev/null 2>&1
     _changes
     for plug in *; do
         cd $plug
@@ -104,7 +106,6 @@ _zap_update() {
         for plug in *; do
             cd $plug
             _pull $plug
-            cd "$ZAP_PLUGIN_DIR"
         done
     elif [[ $plugin == "0" ]]; then
         cd "$ZAP_DIR"
