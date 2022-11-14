@@ -75,7 +75,7 @@ Zap provided commands for updating and cleaning up plugins
   zap --update
   ```
 
-To remove plugins you are no longer using:
+- To remove plugins you are no longer using:
 
   ```sh
   zap --clean
