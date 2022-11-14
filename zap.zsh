@@ -15,7 +15,13 @@ _try_source() {
     # shellcheck disable=SC1090
     [ -f "$1" ] && source "$1"
 }
-
+toggle () {
+  if [ -d "$ZAP_DIR/$1" ]; then
+    mv "$ZAP_DIR/$1" "$ZAP_PLUGIN_DIR" 
+  elif [ -d "$ZAP_PLUGIN_DIR/$1" ]; then 
+    mv "$ZAP_PLUGIN_DIR/$1" "$ZAP_DIR/$1" && mkdir "$ZAP_PLUGIN_DIR/$1"
+  fi
+}
 plug() {
     plugin="$1"
     if [ -f "$plugin" ]; then
