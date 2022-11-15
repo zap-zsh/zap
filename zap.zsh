@@ -18,16 +18,29 @@ _try_source() {
 
 plug() {
     plugin="$1"
-    if [ -f "$plugin" ]; then
-        source "$plugin"
+    local full_plugin_name
+    local plugin_name
+    local repo
+
+    if [[ $plugin == "https://"* ]]; then
+        plugin_name="$(basename $plugin ".${plugin##*.}")"
+        full_plugin_name="$(basename $(dirname $plugin))/$plugin_name"
+        repo="$plugin"
     else
-        local full_plugin_name="$1"
+        full_plugin_name=$1
+        plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
+        repo="https://github.com/${full_plugin_name}.git"
+    fi
+
+    if [ -f "$plugin" ]; then
+        source "$full_plugin_name"
+    else
         local git_ref="$2"
-        local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
         local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
+
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
-            git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
+            git clone $repo "$plugin_dir" > /dev/null 2>&1
             if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
 
             if [ -n "$git_ref" ]; then
