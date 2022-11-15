@@ -1,7 +1,7 @@
 
 <div align="center">
 
-![lunarvim_logo_dark](https://user-images.githubusercontent.com/29136904/200199028-7facb011-6003-4722-b044-3cdbf7f033e0.png)
+![zap_logo](https://user-images.githubusercontent.com/29136904/200197993-81c88dbe-4743-4856-a027-967eb1ee2078.png)
 
 </div>
 
