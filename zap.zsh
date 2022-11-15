@@ -23,6 +23,7 @@ plug() {
     else
         local git_ref="$2"
         local plugin_name=$(echo "$plugin" | awk -F / '{print $NF}')
+        plugin_name="${plugin_name/.git/}"
         local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
