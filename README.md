@@ -1,7 +1,7 @@
 
 <div align="center">
 
-![zap_logo](https://user-images.githubusercontent.com/29136904/200197993-81c88dbe-4743-4856-a027-967eb1ee2078.png)
+![zap_logo](https://user-images.githubusercontent.com/29136904/202043505-8fda8d1e-3669-463b-a0c9-38c367ffb753.png)
 
 </div>
 
