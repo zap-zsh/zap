@@ -27,7 +27,7 @@ plug() {
         local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
-            git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
+            git clone "https://github.com/${full_plugin_name}.git" --depth 1 "$plugin_dir" > /dev/null 2>&1
             if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
 
             if [ -n "$git_ref" ]; then
