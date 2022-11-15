@@ -3,7 +3,7 @@
 main() {
     local install_path="$HOME/.local/share/zap"
 
-    # if install_path already exists
+    # check if install_path already exists
     if [ -d "$install_path" ]; then
         echo "zap is already installed in '$install_path'!"
 
