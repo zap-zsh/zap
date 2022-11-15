@@ -31,7 +31,6 @@ plug() {
         # get repo owner_name and remove the rest
         full_plugin_name="$(basename $(dirname $plugin))/$plugin_name"
 
-        # full repo url
         repo="$plugin"
     else
         full_plugin_name="$1"
