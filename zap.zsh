@@ -17,18 +17,26 @@ _try_source() {
 }
 
 plug() {
+    # 'https://.../repo_owner/repo' or repo_owner/repo
     plugin="$1"
-    local full_plugin_name
-    local plugin_name
-    local repo
+
+    local full_plugin_name # repo_owner/repo
+    local plugin_name # repo name without '.git'
+    local repo # full url to git repo (e.g https://..../repo_owner/repo)
 
     if [[ $plugin == "https://"* ]]; then
+        # get repo name and remove .git from name
         plugin_name="$(basename $plugin ".${plugin##*.}")"
+
+        # get repo owner_name and remove the rest
         full_plugin_name="$(basename $(dirname $plugin))/$plugin_name"
+
+        # full repo url
         repo="$plugin"
     else
-        full_plugin_name=$1
+        full_plugin_name="$1"
         plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
+
         repo="https://github.com/${full_plugin_name}.git"
     fi
 
@@ -40,7 +48,7 @@ plug() {
 
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
-            git clone $repo "$plugin_dir" > /dev/null 2>&1
+            git clone "$repo" "$plugin_dir" > /dev/null 2>&1
             if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
 
             if [ -n "$git_ref" ]; then
