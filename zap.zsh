@@ -21,8 +21,8 @@ plug() {
     plugin="$1"
 
     local full_plugin_name # repo_owner/repo
-    local plugin_name # repo name without '.git'
-    local repo # full url to git repo (e.g https://..../repo_owner/repo)
+    local plugin_name      # repo name without '.git'
+    local repo             # full url to git repo (e.g https://..../repo_owner/repo)
 
     if [[ $plugin == "https://"* ]]; then
         # get repo name and remove .git from name
