@@ -21,15 +21,16 @@ plug() {
     if [ -f "$plugin" ]; then
         source "$plugin"
     else
-        local full_plugin_name="$1"
         local git_ref="$2"
-        local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
+        local plugin_name=$(echo "$plugin" | awk -F / '{print $NF}')
         local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
-            git clone "https://github.com/${full_plugin_name}.git" "$plugin_dir" > /dev/null 2>&1
-            if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
-
+            git clone $1 "$plugin_dir" > /dev/null 2>&1
+            if [ $? -ne 0 ]; then
+                git clone "https://github.com/$1.git" "$plugin_dir" > /dev/null 2>&1
+                if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
+            fi
             if [ -n "$git_ref" ]; then
                 git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1
                 if [ $? -ne 0 ]; then echo "Failed to checkout $git_ref" && return 1; fi
@@ -40,8 +41,8 @@ plug() {
         _try_source "$plugin_dir/$plugin_name.zsh"
         _try_source "$plugin_dir/$plugin_name.zsh-theme"
     fi
-    if [[ -n $full_plugin_name ]]; then
-        echo "$full_plugin_name" >> "$HOME/.local/share/zap/installed_plugins"
+    if [[ -n $plugin ]]; then
+        echo "$plugin" >> "$ZAP_DIR/installed_plugins"
     fi
 }
 
