@@ -27,7 +27,6 @@ main() {
     else
         zshrc="$HOME/.zshrc"
     fi
-    touch "$zshrc"
 
     auto_source="[ -f \"${install_path}/zap.zsh\" ] && source \"${install_path}/zap.zsh\""
 
