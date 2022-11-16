@@ -108,6 +108,7 @@ _zap_update() {
                     if [[ -d "$ZAP_PLUGIN_DIR/$selected" ]];then
                         cd "$ZAP_PLUGIN_DIR/$selected"
                         _pull $selected
+                        cd - > /dev/null 2>&1
                     fi
                 else
                     echo "  ${item##*( )} is not a valid option!"
