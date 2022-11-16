@@ -1,18 +1,18 @@
 #!/bin/sh
 # shellcheck disable=SC1090
 
-fpath=(~/.local/share/zap/completion $fpath)
-rm -rf "$HOME/.local/share/zap/installed_plugins"
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
+export ZAP_ACTIVEPLUGINS="$ZAP_DIR/installed_plugins"
 if [ -z "$ZDOTDIR" ]; then
     export ZAP_ZSHRC="$HOME/.zshrc" # ~/.zshrc
 else
     export ZAP_ZSHRC="$ZDOTDIR/.zshrc"
 fi
+fpath=("$ZAP_DIR/completion" "$fpath")
+rm -rf "$ZAP_ACTIVE_PLUGINS"
 
 _try_source() {
-    # shellcheck disable=SC1090
     [ -f "$1" ] && source "$1"
 }
 
@@ -41,7 +41,7 @@ plug() {
         _try_source "$plugin_dir/$plugin_name.zsh-theme"
     fi
     if [[ -n $full_plugin_name ]]; then
-        echo "$full_plugin_name" >> "$HOME/.local/share/zap/installed_plugins"
+        echo "$full_plugin_name" >> "$ZAP_ACTIVE_PLUGINS"
     fi
 }
 
@@ -56,7 +56,7 @@ _zap_clean() {
     unused_plugins=()
     for i in "$HOME"/.local/share/zap/plugins/*; do
         local plugin_name=$(basename "$i")
-        if ! grep -q "$plugin_name" "$HOME/.local/share/zap/installed_plugins"; then
+        if ! grep -q "$plugin_name" "$ZAP_ACTIVE_PLUGINS"; then
             unused_plugins+=("$plugin_name")
         fi
     done
@@ -67,7 +67,7 @@ _zap_clean() {
             echo -n "Remove: $p? (y/n): "
             read answer
             if [[ $answer == "y" ]]; then
-                rm -rf "$HOME/.local/share/zap/plugins/$p"
+                rm -rf "$ZAP_PLUGIN_DIR/$p"
                 echo "removed: $p"
             fi
         done
@@ -75,7 +75,7 @@ _zap_clean() {
 }
 
 _zap_update() {
-    plugins=$(cat "$HOME/.local/share/zap/installed_plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
+    plugins=$(cat "$ZAP_ACTIVE_PLUGINS" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
     echo -e " 0  ⚡ Zap"
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
