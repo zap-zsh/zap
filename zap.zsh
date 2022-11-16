@@ -21,15 +21,16 @@ plug() {
     if [ -f "$plugin" ]; then
         source "$plugin"
     else
+        local full_plugin_name="$1"
         local git_ref="$2"
         local plugin_name=$(echo "$plugin" | awk -F / '{print $NF}')
         plugin_name="${plugin_name/.git/}"
         local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
-            git clone $1 "$plugin_dir" > /dev/null 2>&1
+            git clone $full_plugin_name --depth 1 "$plugin_dir" > /dev/null 2>&1
             if [ $? -ne 0 ]; then
-                git clone "https://github.com/$1.git" "$plugin_dir" > /dev/null 2>&1
+                git clone "https://github.com/$full_plugin_name.git" --depth 1 "$plugin_dir" > /dev/null 2>&1
                 if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
             fi
             if [ -n "$git_ref" ]; then
@@ -42,15 +43,15 @@ plug() {
         _try_source "$plugin_dir/$plugin_name.zsh"
         _try_source "$plugin_dir/$plugin_name.zsh-theme"
     fi
-    if [[ -n $plugin ]]; then
-        echo "$plugin" >> "$ZAP_DIR/installed_plugins"
+    if [[ -n $full_plugin_name ]]; then
+        echo "$full_plugin_name" >> "$ZAP_DIR/installed_plugins"
     fi
 }
 
 _pull() {
     echo "🔌 $1"
     git pull > /dev/null 2>&1
-    if [ $? -ne 0 ]; then echo "Failed to update $1" && exit 1; fi
+    if [ $? -ne 0 ]; then echo "Failed to update $1" && return 1; fi
     echo -e "\e[1A\e[K⚡ $1"
 }
 
@@ -97,11 +98,21 @@ _zap_update() {
         _pull 'zap'
         cd $pwd
     else
-        for plug in $plugins; do
-            selected=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            cd "$ZAP_PLUGIN_DIR/$selected"
-            _pull $selected
-            cd - > /dev/null 2>&1
+        selected_number=($(echo $plugin | awk -F '[[:space:]]' '{print $0}'))
+        sorted=($(printf '%s\n' "${selected_number[@]}"|sort -u))
+        for item in $sorted;do
+            for plug in $plugins; do
+                selected=$(echo $plug | grep -E "^ ${item##*( )}" | awk -F / '{print $NF}')
+                selected="${selected/.git/}"
+                if [[ -n $selected ]]; then
+                    if [[ -d "$ZAP_PLUGIN_DIR/$selected" ]];then
+                        cd "$ZAP_PLUGIN_DIR/$selected"
+                        _pull $selected
+                    fi
+                else
+                    echo "  ${item##*( )} is not a valid option!"
+                fi
+            done
         done
     fi
     if [[ $ZAP_CLEAN_ON_UPDATE == true ]]; then
