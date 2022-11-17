@@ -82,7 +82,7 @@ _zap_update() {
         BASE=$(git merge-base @ "$UPSTREAM")
         if [ $LOCAL = $REMOTE ]; then
             state=$(echo -e " (upto date)")
-            echo -e "\e[33m${state}\e[0m"
+            echo -e "\e[32m${state}\e[0m"
         elif [ $LOCAL = $BASE ]; then
             state=$(echo -e " (update)")
             echo -e "\e[31m${state}\e[0m"
