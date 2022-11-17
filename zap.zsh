@@ -29,7 +29,8 @@ plug() {
         plugin_name="$(basename $plugin ".${plugin##*.}")"
 
         # get repo owner_name and remove the rest
-        full_plugin_name="$(basename $(dirname $plugin))/$plugin_name"
+        local repo_owner="$(basename $(dirname $plugin))"
+        full_plugin_name="$repo_owner/$plugin_name"
 
         repo="$plugin"
     else
