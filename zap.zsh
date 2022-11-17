@@ -75,12 +75,33 @@ _zap_clean() {
 }
 
 _zap_update() {
-    plugins=$(cat "$HOME/.local/share/zap/installed_plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
-    echo -e " 0  ⚡ Zap"
-    echo "$plugins \n"
+    _changes() {
+        UPSTREAM=${1:-'@{u}'}
+        LOCAL=$(git rev-parse @)
+        REMOTE=$(git rev-parse "$UPSTREAM")
+        BASE=$(git merge-base @ "$UPSTREAM")
+        if [ $LOCAL = $REMOTE ]; then
+            state=$(echo -e "       ... up to date")
+            echo -e "\e[32m${state}\e[0m"
+        elif [ $LOCAL = $BASE ]; then
+            state=$(echo -e "      ... new version available, update.")
+            echo -e "\e[31m${state}\e[0m"
+        fi
+        cd "$ZAP_PLUGIN_DIR"
+    }
+    plugins=$(ls "$HOME/.local/share/zap/plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
+    pwd=$(pwd)
+    cd "$ZAP_DIR"
+    echo " 0  ⚡ Zap"
+    _changes
+    for plug in *; do
+        cd $plug
+        show=$(echo -n $plugins | grep "$plug$")
+        echo -e "$show"
+        _changes
+    done
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
     read plugin
-    pwd=$(pwd)
     echo ""
     if [[ $plugin == "a" ]]; then
         cd "$ZAP_PLUGIN_DIR"
@@ -89,22 +110,19 @@ _zap_update() {
             _pull $plug
             cd "$ZAP_PLUGIN_DIR"
         done
-        cd $pwd > /dev/null 2>&1
     elif [[ $plugin == "0" ]]; then
         cd "$ZAP_DIR"
         _pull 'zap'
-        cd $pwd
     else
-        for plug in $plugins; do
-            selected=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            cd "$ZAP_PLUGIN_DIR/$selected"
-            _pull $selected
-            cd - > /dev/null 2>&1
-        done
+        cd "$ZAP_PLUGIN_DIR"
+        selected=$(echo $plugins | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $5 }')
+        cd $selected
+        _pull $selected
     fi
     if [[ $ZAP_CLEAN_ON_UPDATE == true ]]; then
         _zap_clean
     fi
+    cd $pwd > /dev/null 2>&1
 }
 
 _zap_help() {
@@ -112,10 +130,8 @@ _zap_help() {
 }
 
 _zap_version() {
-    ref=$ZAP_DIR/.git/packed-refs
-    tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags | tail -1)
-    ver=$(echo $tag | cut -d " " -f 2)
-    echo "⚡Zap Version v$ver"
+    release=$(curl https://api.github.com/repos/zap-zsh/zap/releases/latest -s | jq .name -r)
+    echo "\n ⚡$release \n"
 }
 
 typeset -A opts
