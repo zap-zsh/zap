@@ -48,7 +48,9 @@ plug() {
 
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
+
             git clone --depth 1 "$repo" "$plugin_dir" > /dev/null 2>&1
+
             if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
 
             if [ -n "$git_ref" ]; then
