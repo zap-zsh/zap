@@ -12,18 +12,17 @@ else
 fi
 
 _try_source() {
-  sourced=false
-  local plugin_dir="$1"
-  local plugin_name="$2"
-  plugin_files=("$plugin_dir/$plugin_name.plugin.zsh" "$plugin_dir/$plugin_name.zsh" "$plugin_dir/$plugin_name.zsh-theme" "$plugin_dir/${plugin_name#zsh-}.zsh")
-  for i in "${plugin_files[@]}"
-  do
-    if [ -e "$i" ]; then
-        source "$i"
-        sourced=true
-        break
-    fi
-  done
+    sourced=false
+    local plugin_dir="$1"
+    local plugin_name="$2"
+    plugin_files=("$plugin_dir/$plugin_name.plugin.zsh" "$plugin_dir/$plugin_name.zsh" "$plugin_dir/$plugin_name.zsh-theme" "$plugin_dir/${plugin_name#zsh-}.zsh")
+    for i in "${plugin_files[@]}"; do
+        if [ -e "$i" ]; then
+            source "$i"
+            sourced=true
+            break
+        fi
+    done
 }
 
 plug() {
@@ -48,7 +47,7 @@ plug() {
         fi
         _try_source $plugin_dir $plugin_name
         if [[ $sourced == false ]]; then
-          echo "Failed to soruce $full_plugin_name"
+            echo "Failed to soruce $full_plugin_name"
         fi
     fi
     if [[ -n $full_plugin_name ]]; then
