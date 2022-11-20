@@ -13,9 +13,7 @@ fi
 
 _try_source() {
     sourced=false
-    local plugin_dir="$1"
-    local plugin_name="$2"
-    plugin_files_names=("$plugin_dir/$plugin_name.plugin.zsh"
+    plugin_files_names=("$1/$2.plugin.zsh"
         "$plugin_dir/$plugin_name.zsh"
         "$plugin_dir/$plugin_name.zsh-theme"
         "$plugin_dir/${plugin_name#zsh-}.zsh")
