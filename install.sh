@@ -5,7 +5,7 @@ main() {
     mkdir -p "$HOME/.local/share/zap/plugins"
 
     # check if ZDOTDIR is set, and if it is, check if ZDOTDIR/.zshrc exists
-    if [ -n "$ZDOTDIR" ] && [ -f "$ZDOTDIR/.zshrc" ]; then
+    if [ -n "$ZDOTDIR" ]; then
         zshrc="$ZDOTDIR/.zshrc"
     else
         zshrc="$HOME/.zshrc"

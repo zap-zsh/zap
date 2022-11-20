@@ -12,8 +12,18 @@ else
 fi
 
 _try_source() {
-    # shellcheck disable=SC1090
-    [ -f "$1" ] && source "$1"
+  sourced=false
+  local plugin_dir="$1"
+  local plugin_name="$2"
+  plugin_files=("$plugin_dir/$plugin_name.plugin.zsh" "$plugin_dir/$plugin_name.zsh" "$plugin_dir/$plugin_name.zsh-theme" "$plugin_dir/${plugin_name#zsh-}.zsh")
+  for i in "${plugin_files[@]}"
+  do
+    if [ -e "$i" ]; then
+        source "$i"
+        sourced=true
+        break
+    fi
+  done
 }
 
 plug() {
@@ -36,9 +46,10 @@ plug() {
             fi
             echo -e "\e[1A\e[K⚡$plugin_name"
         fi
-        _try_source "$plugin_dir/$plugin_name.plugin.zsh"
-        _try_source "$plugin_dir/$plugin_name.zsh"
-        _try_source "$plugin_dir/$plugin_name.zsh-theme"
+        _try_source $plugin_dir $plugin_name
+        if [[ $sourced == false ]]; then
+          echo "Failed to soruce $full_plugin_name"
+        fi
     fi
     if [[ -n $full_plugin_name ]]; then
         echo "$full_plugin_name" >> "$HOME/.local/share/zap/installed_plugins"
