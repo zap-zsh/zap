@@ -17,42 +17,57 @@ _try_source() {
 }
 
 plug() {
-    # 'https://.../repo_owner/repo' or repo_owner/repo
-    plugin="$1"
+    # --option=argument
+    for i in "$@"; do
+      case $i in
+        -g=*|--git-ref=*)
+            local git_ref="${i#*=}"
+            shift
+        ;;
+        -h|--help)
+            echo "plug help:
 
-    local full_plugin_name # repo_owner/repo
-    local plugin_name      # repo name without '.git'
-    local repo             # full url to git repo (e.g https://..../repo_owner/repo)
+Options:
+    -g, --git-ref
+    -h, --help"
+            return
+        ;;
+        -*|--*)
+            echo "[zap:plug] Unknown option $i"
+        ;;
+        *)
+            # Parse positional args
+            #
+            # Note:
+            #   any arg that doesn't start with '-' or '--'
+            #   will override $plugin
 
-    if [[ $plugin == "https://"* ]]; then
-        # get repo name and remove .git from name
-        plugin_name="$(basename $plugin ".${plugin##*.}")"
-
-        # get repo owner_name and remove the rest
-        local repo_owner="$(basename $(dirname $plugin))"
-        full_plugin_name="$repo_owner/$plugin_name"
-
-        repo="$plugin"
-    else
-        full_plugin_name="$1"
-        plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
-
-        repo="https://github.com/${full_plugin_name}.git"
-    fi
-
-    # NOTE: remove this after done testing!
-    return
+            local plugin="$1"
+            shift
+        ;;
+      esac
+    done
 
     if [ -f "$plugin" ]; then
-        source "$full_plugin_name"
+        source "$plugin"
     else
-        local git_ref="$2"
+        local full_plugin_name # plugin_owner/plugin or https://github.com/plugin_owner/plugin
+        local plugin_name      # plugin name without '.git'
+
+        full_plugin_name="$plugin"
+        plugin_name=$(echo "$plugin" | awk -F / '{print $NF}')
+        plugin_name="${plugin_name/.git/}" # remove .git from plugin name
+
         local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
 
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
 
-            git clone --depth 1 "$repo" "$plugin_dir" > /dev/null 2>&1
+            if curl --head --silent --fail "$full_plugin_name" 2> /dev/null; then
+                git clone --depth 1 "$full_plugin_name" "$plugin_dir" > /dev/null 2>&1
+            else
+                git clone --depth 1 "https://github.com/$full_plugin_name.git" "$plugin_dir" > /dev/null
+            fi
 
             if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
 
