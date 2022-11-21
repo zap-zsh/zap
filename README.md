@@ -40,6 +40,21 @@
 
 </div>
 
+<!-- START OF TABLE OF CONTENTS -->
+<details open>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#example-usage">Example usage</a></li>
+    <li><a href="#commands">Commands</a></li>
+    <li><a href="#uninstall">Uninstall</a></li>
+    <li><a href="#notes">Notes</a></li>
+    <li><a href="#socials">Socials</a></li>
+    <li><a href="#thanks-to-all-contributors">Thanks to all contributors</a></li>
+  </ol>
+</details>
+<!-- END OF TABLE OF CONTENTS -->
+
 ## Install
 
 ```sh
