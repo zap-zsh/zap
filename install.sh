@@ -5,11 +5,7 @@ main() {
     mkdir -p "$HOME/.local/share/zap/plugins"
 
     # check if ZDOTDIR is set, and if it is, check if ZDOTDIR/.zshrc exists
-    if [ -n "$ZDOTDIR" ]; then
-        zshrc="$ZDOTDIR/.zshrc"
-    else
-        zshrc="$HOME/.zshrc"
-    fi
+    zshrc="${ZDOTDIR:-$HOME}/.zshrc"
     touch "$zshrc"
 
     # shellcheck disable=SC2016

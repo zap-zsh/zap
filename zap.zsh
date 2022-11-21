@@ -5,11 +5,7 @@ fpath=(~/.local/share/zap/completion $fpath)
 rm -rf "$HOME/.local/share/zap/installed_plugins"
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
-if [ -z "$ZDOTDIR" ]; then
-    export ZAP_ZSHRC="$HOME/.zshrc" # ~/.zshrc
-else
-    export ZAP_ZSHRC="$ZDOTDIR/.zshrc"
-fi
+export ZAP_ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
 
 _try_source() {
     sourced=false
