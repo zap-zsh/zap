@@ -64,7 +64,7 @@ Options:
             echo "🔌$plugin_name"
 
             if curl --head --silent --fail "$full_plugin_name" 2> /dev/null; then
-                git clone --depth 1 "$full_plugin_name" "$plugin_dir" > /dev/null 2>&1
+                git clone --depth 1 "$full_plugin_name" "$plugin_dir" > /dev/null
             else
                 git clone --depth 1 "https://github.com/$full_plugin_name.git" "$plugin_dir" > /dev/null
             fi
