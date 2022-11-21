@@ -40,6 +40,9 @@ plug() {
         repo="https://github.com/${full_plugin_name}.git"
     fi
 
+    # NOTE: remove this after done testing!
+    return
+
     if [ -f "$plugin" ]; then
         source "$full_plugin_name"
     else
