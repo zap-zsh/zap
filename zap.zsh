@@ -24,24 +24,55 @@ plug() {
         local full_plugin_name="$1"
         local git_ref="$2"
         local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
-        local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
-        if [ ! -d "$plugin_dir" ]; then
+        local plugin_install_dir="$ZAP_PLUGIN_DIR/$plugin_name"
+        if [ ! -d "$plugin_install_dir" ]; then
             echo "🔌$plugin_name"
-            git clone "https://github.com/${full_plugin_name}.git" --depth 1 "$plugin_dir" > /dev/null 2>&1
+            git clone "https://github.com/${full_plugin_name}.git" --depth 1 "$plugin_install_dir" > /dev/null 2>&1
             if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
 
             if [ -n "$git_ref" ]; then
-                git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1
+                git -C "$plugin_install_dir" checkout "$git_ref" > /dev/null 2>&1
                 if [ $? -ne 0 ]; then echo "Failed to checkout $git_ref" && return 1; fi
             fi
             echo -e "\e[1A\e[K⚡$plugin_name"
         fi
-        _try_source "$plugin_dir/$plugin_name.plugin.zsh"
-        _try_source "$plugin_dir/$plugin_name.zsh"
-        _try_source "$plugin_dir/$plugin_name.zsh-theme"
+        _try_source "$plugin_install_dir/$plugin_name.plugin.zsh"
+        _try_source "$plugin_install_dir/$plugin_name.zsh"
+        _try_source "$plugin_install_dir/$plugin_name.zsh-theme"
     fi
     if [[ -n $full_plugin_name ]]; then
         echo "$full_plugin_name" >> "$HOME/.local/share/zap/installed_plugins"
+    fi
+}
+
+sub_plug() {
+    local full_plugin_name="$1"
+    local git_ref="$2"
+    local plugin_sub_name="$3"
+    local plugin_sub_path="$4"
+
+    # Path equals name if not given.
+    [ -z "$plugin_sub_path" ] && plugin_sub_path="$plugin_sub_path"
+
+    local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
+    local plugin_install_dir="$ZAP_PLUGIN_DIR/$plugin_name"
+
+    if [ ! -d "$plugin_install_dir" ]; then
+        echo "🔌[$plugin_name] $plugin_sub_name"
+        git clone "https://github.com/${full_plugin_name}.git" --depth 1 "$plugin_install_dir" > /dev/null 2>&1
+        if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
+
+        if [ -n "$git_ref" ]; then
+            git -C "$plugin_install_dir" checkout "$git_ref" > /dev/null 2>&1
+            if [ $? -ne 0 ]; then echo "Failed to checkout $git_ref" && return 1; fi
+        fi
+        echo -e "\e[1A\e[K⚡[$plugin_name] $plugin_sub_name"
+    fi
+    _try_source "$plugin_install_dir/$plugin_sub_path/$plugin_sub_name.plugin.zsh"
+    _try_source "$plugin_install_dir/$plugin_sub_path/$plugin_sub_name.zsh"
+    _try_source "$plugin_install_dir/$plugin_sub_path/$plugin_sub_name.zsh-theme"
+    if [[ -n $full_plugin_name ]]; then
+        echo "$full_plugin_name [$plugin_sub_name]" >> "$HOME/.local/share/zap/installed_plugins"
     fi
 }
 
