@@ -17,7 +17,7 @@ _try_source() {
 }
 
 plug() {
-    plugin="$1"
+    local plugin="$1"
     if [ -f "$plugin" ]; then
         source "$plugin"
     else
@@ -53,7 +53,7 @@ _pull() {
 }
 
 _zap_clean() {
-    unused_plugins=()
+    local unused_plugins=()
     for i in "$HOME"/.local/share/zap/plugins/*; do
         local plugin_name=$(basename "$i")
         if ! grep -q "$plugin_name" "$HOME/.local/share/zap/installed_plugins"; then
@@ -75,12 +75,12 @@ _zap_clean() {
 }
 
 _zap_update() {
-    plugins=$(cat "$HOME/.local/share/zap/installed_plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
+    local plugins=$(cat "$HOME/.local/share/zap/installed_plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
     echo -e " 0  ⚡ Zap"
     echo "$plugins \n"
     echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
     read plugin
-    pwd=$(pwd)
+    local pwd=$(pwd)
     echo ""
     if [[ $plugin == "a" ]]; then
         cd "$ZAP_PLUGIN_DIR"
