@@ -1,7 +1,9 @@
 #!/bin/sh
 
 main() {
-    git clone https://github.com/${1:-'zap-zsh'}/zap.git "$HOME/.local/share/zap" > /dev/null 2>&1
+    local usr=$1
+    local default='zap-zsh'
+    git clone https://github.com/${usr:-$default}/zap.git "$HOME/.local/share/zap" > /dev/null 2>&1
     mkdir -p "$HOME/.local/share/zap/plugins"
 
     # check if ZDOTDIR is set, and if it is, check if ZDOTDIR/.zshrc exists
