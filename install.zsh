@@ -1,8 +1,8 @@
 #!/bin/zsh
 
+USR=$1
+DEFAULT='zap-zsh'
 main() {
-    local USR=$1
-    local DEFAULT='zap-zsh'
     git clone "https://github.com/${USR:-$DEFAULT}/zap.git" "$HOME/.local/share/zap" > /dev/null 2>&1
     mkdir -p "$HOME/.local/share/zap/plugins"
 
