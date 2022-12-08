@@ -5,15 +5,21 @@ fpath=(~/.local/share/zap/completion $fpath)
 rm -rf "$HOME/.local/share/zap/installed_plugins"
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
-if [ -z "$ZDOTDIR" ]; then
-    export ZAP_ZSHRC="$HOME/.zshrc" # ~/.zshrc
-else
-    export ZAP_ZSHRC="$ZDOTDIR/.zshrc"
-fi
+export ZAP_ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
 
 _try_source() {
-    # shellcheck disable=SC1090
-    [ -f "$1" ] && source "$1"
+    sourced=false
+    plugin_files_names=("$1/$2.plugin.zsh"
+        "$plugin_dir/$plugin_name.zsh"
+        "$plugin_dir/$plugin_name.zsh-theme"
+        "$plugin_dir/${plugin_name#zsh-}.zsh")
+    for i in "${plugin_files_names[@]}"; do
+        if [ -e "$i" ]; then
+            source "$i"
+            sourced=true
+            break
+        fi
+    done
 }
 
 plug() {
@@ -36,9 +42,10 @@ plug() {
             fi
             echo -e "\e[1A\e[K⚡$plugin_name"
         fi
-        _try_source "$plugin_dir/$plugin_name.plugin.zsh"
-        _try_source "$plugin_dir/$plugin_name.zsh"
-        _try_source "$plugin_dir/$plugin_name.zsh-theme"
+        _try_source $plugin_dir $plugin_name
+        if [[ $sourced == false ]]; then
+            echo "Failed to soruce $full_plugin_name"
+        fi
     fi
     if [[ -n $full_plugin_name ]]; then
         echo "$full_plugin_name" >> "$HOME/.local/share/zap/installed_plugins"
