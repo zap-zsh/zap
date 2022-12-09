@@ -44,7 +44,7 @@ plug() {
         fi
         _try_source $plugin_dir $plugin_name
         if [[ $sourced == false ]]; then
-            echo "Failed to soruce $full_plugin_name"
+            echo "Failed to source $full_plugin_name"
         fi
     fi
     if [[ -n $full_plugin_name ]]; then
