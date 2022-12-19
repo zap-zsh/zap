@@ -45,6 +45,12 @@
 ```sh
 sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.sh)
 ```
+    
+To install a specific branch of a plugin, you can pass the `--branch` flag to the install.sh script, followed by the name of the branch you want to install:
+
+```sh
+sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.sh) --branch release-0.1
+```
 
 ## Example usage
 
