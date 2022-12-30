@@ -62,7 +62,7 @@ _pull() {
 
 _zap_clean() {
     unused_plugins=()
-    for i in "$ZAP_PLUGIN_DIR/*"; do
+    for i in "$ZAP_PLUGIN_DIR"/*; do
         local plugin_name=$(basename "$i")
         if ! grep -q "$plugin_name" "$ZAP_DIR/installed_plugins"; then
             unused_plugins+=("$plugin_name")
