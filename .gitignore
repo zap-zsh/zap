@@ -1,2 +1,15 @@
+# System Files
+.cache
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vscode/
+*.code-workspace
+
+# Zap Ignores
 plugins/
 installed_plugins
