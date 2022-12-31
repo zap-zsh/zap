@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/env zsh
 
 main() {
     branch="master"
