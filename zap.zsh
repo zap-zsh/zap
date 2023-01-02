@@ -1,4 +1,4 @@
-#!/bin/env zsh
+#!/usr/bin/env zsh
 # shellcheck disable=SC1090
 
 export ZAP_DIR="$HOME/.local/share/zap"
