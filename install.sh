@@ -15,7 +15,7 @@ main() {
 
     # shellcheck disable=SC2016
     if ! grep -q '[ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"' "$zshrc"; then
-        sed -i '1 i\
+        sed -i.old '1 i\
 [ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"' "$zshrc"
     fi
 }
