@@ -24,17 +24,58 @@ _try_source() {
 }
 
 plug() {
-    plugin="$1"
+    # --option=argument
+    for i in "$@"; do
+      case $i in
+        -g=*|--git-ref=*)
+            local git_ref="${i#*=}"
+            shift
+        ;;
+        -h|--help)
+            echo "plug help:
+
+Options:
+    -g, --git-ref
+    -h, --help"
+            return
+        ;;
+        -*|--*)
+            echo "[zap:plug] Unknown option $i"
+        ;;
+        *)
+            # Parse positional args
+            #
+            # Note:
+            #   any arg that doesn't start with '-' or '--'
+            #   will override $plugin
+
+            local plugin="$1"
+            shift
+        ;;
+      esac
+    done
+
     if [ -f "$plugin" ]; then
         source "$plugin"
     else
-        local full_plugin_name="$1"
-        local git_ref="$2"
-        local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
+        local full_plugin_name # plugin_owner/plugin or https://github.com/plugin_owner/plugin
+        local plugin_name      # plugin name without '.git'
+
+        full_plugin_name="$plugin"
+        plugin_name=$(echo "$plugin" | awk -F / '{print $NF}')
+        plugin_name="${plugin_name/.git/}" # remove .git from plugin name
+
         local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
+
         if [ ! -d "$plugin_dir" ]; then
             echo "🔌$plugin_name"
-            git clone "https://github.com/${full_plugin_name}.git" --depth 1 "$plugin_dir" > /dev/null 2>&1
+
+            if curl --head --silent --fail "$full_plugin_name" 2> /dev/null; then
+                git clone --depth 1 "$full_plugin_name" "$plugin_dir" > /dev/null
+            else
+                git clone --depth 1 "https://github.com/$full_plugin_name.git" "$plugin_dir" > /dev/null
+            fi
+
             if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
 
             if [ -n "$git_ref" ]; then
