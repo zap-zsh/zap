@@ -1,151 +1,110 @@
 #!/usr/bin/env zsh
 # shellcheck disable=SC1090
 
+export ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
 export ZAP_DIR="$HOME/.local/share/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
-export ZAP_ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
+export -a ZAP_INSTALLED_PLUGINS=()
+fpath+="$ZAP_DIR/completion"
 
-fpath=($ZAP_DIR/completion $fpath)
-rm -rf "$ZAP_DIR/installed_plugins"
+function plug() {
 
-_try_source() {
-    sourced=false
-    plugin_files_names=("$plugin_dir/$plugin_name.plugin.zsh"
-        "$plugin_dir/$plugin_name.zsh"
-        "$plugin_dir/$plugin_name.zsh-theme"
-        "$plugin_dir/${plugin_name#zsh-}.zsh")
-    for i in "${plugin_files_names[@]}"; do
-        if [ -e "$i" ]; then
-            source "$i"
-            sourced=true
-            break
-        fi
-    done
-}
-
-plug() {
-    plugin="$1"
-    if [ -f "$plugin" ]; then
-        source "$plugin"
-    else
-        local full_plugin_name="$1"
-        local git_ref="$2"
-        local plugin_name=$(echo "$full_plugin_name" | cut -d "/" -f 2)
-        local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
-        if [ ! -d "$plugin_dir" ]; then
-            echo "🔌$plugin_name"
-            git clone "https://github.com/${full_plugin_name}.git" --depth 1 "$plugin_dir" > /dev/null 2>&1
-            if [ $? -ne 0 ]; then echo "Failed to clone $plugin_name" && return 1; fi
-
-            if [ -n "$git_ref" ]; then
-                git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1
-                if [ $? -ne 0 ]; then echo "Failed to checkout $git_ref" && return 1; fi
-            fi
-            echo -e "\e[1A\e[K⚡$plugin_name"
-        fi
-        _try_source
-        if [[ $sourced == false ]]; then
-            echo "Failed to source $full_plugin_name"
-        fi
-    fi
-    if [[ -n $full_plugin_name ]]; then
-        echo "$full_plugin_name" >> "$ZAP_DIR/installed_plugins"
-    fi
-}
-
-_pull() {
-    echo "🔌 $1"
-    git pull > /dev/null 2>&1
-    if [ $? -ne 0 ]; then echo "Failed to update $1" && exit 1; fi
-    echo -e "\e[1A\e[K⚡ $1"
-}
-
-_zap_clean() {
-    unused_plugins=()
-    for i in "$ZAP_PLUGIN_DIR"/*; do
-        local plugin_name=$(basename "$i")
-        if ! grep -q "$plugin_name" "$ZAP_DIR/installed_plugins"; then
-            unused_plugins+=("$plugin_name")
-        fi
-    done
-    if [ ${#unused_plugins[@]} -eq 0 ]; then
-        echo "✅ Nothing to remove"
-    else
-        for p in ${unused_plugins[@]}; do
-            echo -n "Remove: $p? (y/n): "
-            read answer
-            if [[ $answer == "y" ]]; then
-                rm -rf "$ZAP_PLUGIN_DIR/$p"
-                echo "removed: $p"
-            fi
+    function _try_source() {
+        typeset -a extensions=(".plugin.zsh" ".zsh-theme" ".zsh")
+        for ext in "${extensions[@]}"; do
+            [[ -e "$plugin_dir/$plugin_name$ext" ]] && source "$plugin_dir/$plugin_name$ext" && return 0
+            [[ -e "$plugin_dir/${plugin_name#zsh-}$ext" ]] && source "$plugin_dir/${plugin_name#zsh-}$ext" && return 0
         done
+    }
+
+    [[ -f "$1" ]] && source "$1" && return 0
+    local plugin="$1"
+    _try_source $plugin && return
+    local git_ref="$2"
+    local plugin_name=${plugin:t}
+    local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
+    if [ ! -d "$plugin_dir" ]; then
+        echo "🔌 Zap is installing $plugin_name..."
+        git clone "https://github.com/${plugin}.git" "$plugin_dir" > /dev/null 2>&1 || { echo -e "\e[1A\e[K❌ Failed to clone $plugin_name"; return 12 }
+        echo -e "\e[1A\e[K⚡ Zap installed $plugin_name"
     fi
+    [[ -n "$git_ref" ]] && { git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1 || { echo "❌ Failed to checkout $git_ref"; return 13 }}
+    _try_source && { ZAP_INSTALLED_PLUGINS+="$plugin_name" && return 0 } || echo "❌ $plugin_name not activated" && return 1
 }
 
-_zap_update() {
-    plugins=$(cat "$ZAP_DIR/installed_plugins" | awk 'BEGIN { FS = "\n" } { print " " int((NR)) echo "  🔌 " $1 }')
+function _pull() {
+    echo "🔌 updating ${1:t}..."
+    git -C $1 pull > /dev/null 2>&1 && { echo -e "\e[1A\e[K⚡ ${1:t} updated!"; return 0 } || { echo -e "\e[1A\e[K❌ Failed to pull"; return 14 }
+}
+
+function _zap_clean() {
+    typeset -a unused_plugins=()
+    for plugin in "$ZAP_PLUGIN_DIR"/*; do
+        [[ "$ZAP_INSTALLED_PLUGINS[(Ie)${plugin:t}]" -eq 0 ]] && unused_plugins+=("${plugin:t}")
+    done
+    [[ ${#unused_plugins[@]} -eq 0 ]] && { echo "✅ Nothing to remove"; return 15 }
+    for plug in ${unused_plugins[@]}; do
+        echo "❔ Remove: $plug? (y/N)"
+        read -qs answer
+        [[ "$answer" == "y" ]] && { rm -rf "$ZAP_PLUGIN_DIR/$plug" && echo -e "\e[1A\e[K✅ Removed $plug" } || echo -e "\e[1A\e[K❕ skipped $plug"
+    done
+}
+
+function _zap_update() {
+    local _plugin _plug
     echo -e " 0  ⚡ Zap"
-    echo "$plugins \n"
-    echo -n "🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
-    read plugin
-    pwd=$(pwd)
+    for _plugin in ${ZAP_INSTALLED_PLUGINS[@]}; do
+        echo "$ZAP_INSTALLED_PLUGINS[(Ie)$_plugin]  🔌 $_plugin"
+    done
+    echo -n "\n🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
+    read _plugin
     echo ""
-    if [[ $plugin == "a" ]]; then
-        cd "$ZAP_PLUGIN_DIR"
-        for plug in *; do
-            cd $plug
-            _pull $plug
-            cd "$ZAP_PLUGIN_DIR"
+    if [[ $_plugin == "a" || $_plugin == "A" ]]; then
+        for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do
+            _pull "$ZAP_PLUGIN_DIR/$_plug"
         done
-        cd $pwd > /dev/null 2>&1
-    elif [[ $plugin == "0" ]]; then
-        cd "$ZAP_DIR"
-        _pull 'zap'
-        cd $pwd
+    elif [[ $_plugin -eq 0 ]]; then
+        _pull "$ZAP_DIR"
+    elif [[ $_plugin -gt ${#ZAP_INSTALLED_PLUGINS[@]} ]]; then
+        echo "❌ Invalid option" && return 1
     else
-        for plug in $plugins; do
-            selected=$(echo $plug | grep -E "^ $plugin" | awk 'BEGIN { FS = "[ /]" } { print $6 }')
-            cd "$ZAP_PLUGIN_DIR/$selected"
-            _pull $selected
-            cd - > /dev/null 2>&1
-        done
+        _pull "$ZAP_PLUGIN_DIR/$ZAP_INSTALLED_PLUGINS[$_plugin]"
     fi
-    if [[ $ZAP_CLEAN_ON_UPDATE == true ]]; then
-        _zap_clean
-    fi
+    [[ $ZAP_CLEAN_ON_UPDATE == true ]] && _zap_clean || return 0
 }
 
-_zap_help() {
-    cat "$ZAP_DIR/doc.txt"
+function _zap_help() {
+    echo "Usage: zap <command>
+
+COMMANDS:
+    clean	Remove unused plugins
+    help	Show this help message
+    update	Update plugins
+    version	Show version information"
 }
 
-_zap_version() {
-    ref=$ZAP_DIR/.git/packed-refs
-    tag=$(awk 'BEGIN { FS = "[ /]" } { print $3, $4 }' $ref | grep tags | tail -1)
-    ver=$(echo $tag | cut -d " " -f 2)
-    echo "⚡Zap Version v$ver"
+function _zap_version() {
+    local -r BLUE="\033[1;34m" GREEN="\033[1;32m" NOCOLOR="\033[0m"
+    local _ver=${$(git -C $ZAP_DIR describe --tags HEAD)%%-*} _commit=${$(git -C $ZAP_DIR describe --tags HEAD)##*-}
+    echo "⚡ Zap Version is ${GREEN}v${_ver}${NOCOLOR} on commit ${BLUE}${_commit#g}${NOCOLOR}"
 }
 
-typeset -A opts
-opts=(
-    -h "_zap_help"
-    --help "_zap_help"
-    -u "_zap_update"
-    --update "_zap_update"
-    -c "_zap_clean"
-    --clean "_zap_clean"
-    -v "_zap_version"
-    --version "_zap_version"
-)
-
-zap() {
+function zap() {
+    typeset -A subcmds=(
+        clean "_zap_clean"
+        help "_zap_help"
+        update "_zap_update"
+        version "_zap_version"
+    )
     emulate -L zsh
-    if [[ -z "$opts[$1]" ]]; then
-        _zap_help
-        return 1
-    fi
-    opt="${opts[$1]}"
-    $opt
+    [[ -z "$subcmds[$1]" ]] && { echo 'Invalid option, see "zap help"'; return 1 } || ${subcmds[$1]}
 }
 
-# vim: ft=bash ts=4 et
+# vim: ft=zsh ts=4 et
+# Return codes:
+#   0:  Success
+#   1:  Invalid option
+#   12: Failed to clone
+#   13: Failed to checkout
+#   14: Failed to pull
+#   15: Nothing to remove

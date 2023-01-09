@@ -46,11 +46,13 @@
 sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.sh)
 ```
     
-To install a specific branch of a plugin, you can pass the `--branch` flag to the install.sh script, followed by the name of the branch you want to install:
+To install a specific branch of Zap, you can pass the `--branch` flag to the install.sh script, followed by the name of the branch you want to install:
 
 ```sh
 sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.sh) --branch release-0.1
 ```
+
+**Zap works on Linux, macOS, Windows (within WSL), Android (within Termux)**
 
 ## Example usage
 
@@ -60,7 +62,9 @@ Add the following to your `.zshrc`
 # Example install plugins
 plug "zap-zsh/supercharge"
 plug "zsh-users/zsh-autosuggestions"
-plug "zsh-users/zsh-syntax-highlighting"
+
+#Example plugin pinned to specifc commit or branch, just pass the git reference
+plug "zsh-users/zsh-syntax-highlighting" "122dc46"
 
 # Example theme
 plug "zap-zsh/zap-prompt"
@@ -69,6 +73,17 @@ plug "zap-zsh/zap-prompt"
 plug "esc/conda-zsh-completion"
 ```
 
+You can also use `Zap` to source your custom files, like:
+
+```sh
+plug "${ZDOTDIR:-$HOME}/aliases"
+```
+:warning:_In this case the file has to be present in your system and the argument passed to `plug` has to be a file descriptor that points to a regular file. This means you actually need to specify the path to the file (absolute or using environment variables like shown above) and, if the file has an extension you must type it._<br>
+For more information about that, take a look at [this issue](https://github.com/zap-zsh/zap/issues/88)
+
+Is possible to call `plug` in any interactive shell session to source a file or to download and source a plugin for that particular session.<br>
+:warning: If you call `plug` outside your `.zshrc` file, the plugin you sourced will not be sourced at the next shell reload.
+ 
 ## Commands
 
 Zap provided commands for updating and cleaning up plugins
@@ -76,13 +91,13 @@ Zap provided commands for updating and cleaning up plugins
 - To update plugins or Zap:
 
   ```sh
-  zap --update
+  zap update
   ```
 
 - To remove plugins you are no longer using:
 
   ```sh
-  zap --clean
+  zap clean
   ```
 
 ## Uninstall
