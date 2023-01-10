@@ -13,7 +13,7 @@ _try_source() {
     plugin_files_names=("$plugin_dir/$plugin_name.plugin.zsh"
         "$plugin_dir/$plugin_name.zsh"
         "$plugin_dir/$plugin_name.zsh-theme"
-        "$plugin_dir/${plugin_name#zsh-}.zsh")
+    "$plugin_dir/${plugin_name#zsh-}.zsh")
     for i in "${plugin_files_names[@]}"; do
         if [ -e "$i" ]; then
             source "$i"
