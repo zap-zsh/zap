@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-# shellcheck disable=SC1090
 
 export ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
 export ZAP_DIR="$HOME/.local/share/zap"
