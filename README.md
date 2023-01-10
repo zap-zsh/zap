@@ -41,13 +41,13 @@
 ## Install
 
 ```sh
-sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.sh)
+sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
 ```
 
-To install a specific branch of Zap, you can pass the `--branch` flag to the install.sh script, followed by the name of the branch you want to install:
+To install a specific branch of Zap, you can pass the `--branch` flag to the `install.zsh` script, followed by the name of the branch you want to install:
 
 ```sh
-sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.sh) --branch release-0.1
+sh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-0.1
 ```
 
 **Zap works on Linux, macOS, Windows (within WSL), Android (within Termux)**
