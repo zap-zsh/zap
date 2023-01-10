@@ -1,5 +1,5 @@
 repos:
   - repo: https://github.com/lovesegfault/beautysh
-    - rev: v6.1.0
-      hooks:
-        - id: beautysh
+    rev: v6.1.0
+    hooks:
+      - id: beautysh
