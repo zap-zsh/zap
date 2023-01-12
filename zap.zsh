@@ -83,9 +83,11 @@ COMMANDS:
 }
 
 function _zap_version() {
-    local -r BLUE="\033[1;34m" GREEN="\033[1;32m" NOCOLOR="\033[0m"
-    local _ver=${$(git -C $ZAP_DIR describe --tags HEAD)%%-*} _commit=${$(git -C $ZAP_DIR describe --tags HEAD)##*-}
-    echo "⚡ Zap Version is ${GREEN}v${_ver}${NOCOLOR} on commit ${BLUE}${_commit#g}${NOCOLOR}"
+    # local -r BLUE="\033[1;34m" GREEN="\033[1;32m" RESET="\033[0m"
+    local -Ar color=(BLUE "\033[1;34m" GREEN "\033[1;32m" RESET "\033[0m")
+    local _ver=${$(git -C $ZAP_DIR describe --tags HEAD)%%-*} _branch=$(git -C "$ZAP_DIR" branch --show-current) _commit=${$(git -C $ZAP_DIR describe --tags HEAD)##*-}
+    echo "⚡ Zap v${color[GREEN]}${_ver}${color[RESET]}\nBranch:\t${color[GREEN]}${_branch}${color[RESET]}\nCommit:\t${color[BLUE]}${_commit#g}${color[RESET]}"
+    # echo "⚡ Zap Version is ${GREEN}v${_ver}${RESET} on commit ${BLUE}${_commit#g}${RESET}"
 }
 
 function zap() {
