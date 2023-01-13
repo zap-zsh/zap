@@ -51,13 +51,12 @@ function _zap_clean() {
 
 function _zap_update() {
     local _plugin _plug
-    echo -e " 0  ⚡ Zap"
+    echo " 0  ⚡ Zap"
     for _plugin in ${ZAP_INSTALLED_PLUGINS[@]}; do
         echo "$ZAP_INSTALLED_PLUGINS[(Ie)$_plugin]  🔌 $_plugin"
     done
     echo -n "\n🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
     read _plugin
-    echo ""
     [[ -z $_plugin ]] && return 0
     [[ $_plugin -gt ${#ZAP_INSTALLED_PLUGINS[@]} ]] && echo "❌ Invalid option" && return 1
     [[ $_plugin -eq 0 ]] && _pull "$ZAP_DIR"
