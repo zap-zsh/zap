@@ -1,4 +1,4 @@
-[*.*sh]
+[*.zsh]
 shell_variant = zsh
 indent_style = space
 indent_size = 4
