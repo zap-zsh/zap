@@ -46,7 +46,6 @@ function _zap_clean() {
         echo "❔ Remove: $plug? (y/N)"
         read -qs answer
         [[ "$answer" == "y" ]] && { rm -rf "$ZAP_PLUGIN_DIR/$plug" && echo -e "\e[1A\e[K✅ Removed $plug" } || echo -e "\e[1A\e[K❕ skipped $plug"
-    done
 }
 
 function _zap_update() {
