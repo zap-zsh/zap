@@ -13,11 +13,12 @@ main() {
     zshrc="${ZDOTDIR:-$HOME}/.zshrc"
     touch "$zshrc"
 
-    # shellcheck disable=SC2016
+# @formatter:off
     if ! grep -q '[ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"' "$zshrc"; then
         sed -i.old '1 i\
 [ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"' "$zshrc"
     fi
+# @formatter:on
 }
 
 main "$@"
