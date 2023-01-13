@@ -58,17 +58,13 @@ function _zap_update() {
     echo -n "\n🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: "
     read _plugin
     echo ""
-    if [[ $_plugin == "a" || $_plugin == "A" ]]; then
-        for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do
-            _pull "$ZAP_PLUGIN_DIR/$_plug"
-        done
-    elif [[ $_plugin -eq 0 ]]; then
-        _pull "$ZAP_DIR"
-    elif [[ $_plugin -gt ${#ZAP_INSTALLED_PLUGINS[@]} ]]; then
-        echo "❌ Invalid option" && return 1
-    else
-        _pull "$ZAP_PLUGIN_DIR/$ZAP_INSTALLED_PLUGINS[$_plugin]"
-    fi
+    [[ -z $_plugin ]] && return 0
+    [[ $_plugin -gt ${#ZAP_INSTALLED_PLUGINS[@]} ]] && echo "❌ Invalid option" && return 1
+    [[ $_plugin -eq 0 ]] && _pull "$ZAP_DIR"
+    [[ $_plugin:l == "a" ]] && for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do
+        _pull "$ZAP_PLUGIN_DIR/$_plug"
+    done
+    [[ -n $_plugin ]] && _pull "$ZAP_PLUGIN_DIR/$ZAP_INSTALLED_PLUGINS[$_plugin]"
     [[ $ZAP_CLEAN_ON_UPDATE == true ]] && _zap_clean || return 0
 }
 
