@@ -51,7 +51,7 @@ function _zap_clean() {
 
 function _zap_update() {
     local _plugin _plug
-    echo " 0  ⚡ Zap"
+    echo "0  ⚡ Zap"
     for _plugin in ${ZAP_INSTALLED_PLUGINS[@]}; do
         echo "$ZAP_INSTALLED_PLUGINS[(Ie)$_plugin]  🔌 $_plugin"
     done
@@ -59,7 +59,7 @@ function _zap_update() {
     read _plugin
     [[ -z $_plugin ]] && return 0
     [[ $_plugin -gt ${#ZAP_INSTALLED_PLUGINS[@]} ]] && echo "❌ Invalid option" && return 1
-    [[ $_plugin -eq 0 ]] && _pull "$ZAP_DIR"
+    [[ $_plugin -eq 0 ]] && { git -C "$ZAP_DIR" pull &> /dev/null && { echo -e "\e[1A\e[K⚡ Zap updated!"; return 0 } || { echo -e "\e[1A\e[K❌ Failed to pull"; return 14 } }
     [[ $_plugin:l == "a" ]] && for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do
         _pull "$ZAP_PLUGIN_DIR/$_plug"
     done
