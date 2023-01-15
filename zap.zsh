@@ -91,7 +91,7 @@ function zap() {
         version "_zap_version"
     )
     emulate -L zsh
-    [[ -z "$subcmds[$1]" ]] && { echo 'Invalid option, see "zap help"'; return 1 } || ${subcmds[$1]}
+    [[ -z "$subcmds[$1]" ]] && { _zap_help; return 1 } || ${subcmds[$1]}
 }
 
 # vim: ft=zsh ts=4 et
