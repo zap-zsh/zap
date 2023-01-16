@@ -1,7 +1,9 @@
 #compdef zap
 
-_arguments -C -s \
-  "(-)"{-h,--help}"[Show help information]" \
-  "(-)"{-v,--version}"[Show version information]" \
-  "(-)"{-u,--update}"[Update plugins]" \
-  "(-)"{-c,--clean}"[Remove unused plugins]" \
+local -a subcmds=(
+	"clean:Remove unused plugins"
+	"help:Show help informations"
+	"update:Update plugins"
+	"version:Show version information"
+)
+_describe 'zap' subcmds
