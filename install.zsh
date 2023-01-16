@@ -17,7 +17,6 @@ main() {
     }
 
     git clone -b "${BRANCH:-master}" https://github.com/zap-zsh/zap.git "$ZAP_DIR" > /dev/null 2>&1 || { echo "❌ Failed to install Zap" && return 2 }
-    mkdir -p "$ZAP_DIR/plugins"
 
 # @formatter:off
 	if ! grep -q '[ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"' "$ZSHRC"; then
