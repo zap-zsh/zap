@@ -1,8 +1,0 @@
-blank_issues_enabled: true
-contact_links:
-  - name: Support
-    url: https://github.com/zap-zsh/zap/issues
-    about: Ask the community for support
-  - name: Get help on Discord
-    url: https://discordapp.com/channels/701530051140780102/1039922539775922198
-    about: Have a quick question? Join the Discord server and ask on the appropriate channel.
