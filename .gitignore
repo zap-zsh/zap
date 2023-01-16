@@ -11,5 +11,5 @@ Thumbs.db
 *.code-workspace
 
 # Zap Ignores
-plugins/
+plugins/**/
 installed_plugins
