@@ -6,8 +6,15 @@ main() {
     [[ $1 == "--branch" || $1 == "-b" && -n $2 ]] && local BRANCH="$2"
 
     # check if ZAP_DIR already exists
-    [[ -d "$ZAP_DIR" ]] && { echo "Zap is already installed in '$ZAP_DIR'!" && read -q "res?Reinstall Zap? [y/N] "; echo "" }
-    [[ "$res" == "y" ]] && { echo "Reinstalling Zap..." && rm -rf "$ZAP_DIR" } || return 0
+    [[ -d "$ZAP_DIR" ]] && {
+        echo "Zap is already installed in '$ZAP_DIR'!"
+        read -q "res?Reinstall Zap? [y/N] "
+        echo ""
+        [[ "$res" == "y" ]] && {
+            echo "Reinstalling Zap..."
+            rm -rf "$ZAP_DIR"
+        } || return 0
+    }
 
     git clone -b "${BRANCH:-master}" https://github.com/zap-zsh/zap.git "$ZAP_DIR" > /dev/null 2>&1 || { echo "❌ Failed to install Zap" && return 2 }
     mkdir -p "$ZAP_DIR/plugins"
