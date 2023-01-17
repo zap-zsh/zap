@@ -10,10 +10,12 @@ main() {
         echo "Zap is already installed in '$ZAP_DIR'!"
         read -q "res?Reinstall Zap? [y/N] "
         echo ""
-        [[ "$res" == "y" ]] && {
-            echo "Reinstalling Zap..."
-            rm -rf "$ZAP_DIR"
-        } || echo "❕ skipped!" && return
+        [[ $res == "n" ]] && {
+            echo "❕ skipped!"
+            return
+        }
+        echo "Reinstalling Zap..."
+        rm -rf "$ZAP_DIR"
     }
 
     git clone -b "${BRANCH:-master}" https://github.com/zap-zsh/zap.git "$ZAP_DIR" > /dev/null 2>&1 || { echo "❌ Failed to install Zap" && return 2 }
