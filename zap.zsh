@@ -16,7 +16,12 @@ function plug() {
         done
     }
 
-    [[ -f "$1" ]] && source "$1" && return 0
+    # If the directory exists, then local source only
+    if [ -d $(dirname "$1") ]; then
+        [[ -f "$1" ]] && source "$1"
+        return 0
+    fi
+
     local plugin="$1"
     _try_source $plugin && return
     local git_ref="$2"
