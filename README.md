@@ -43,7 +43,7 @@
 - [ZSH](https://www.zsh.org/)
 - a nerd font (optional)
 
-To get your nerd font check out [getnf](https://github.com/ronniedroid/getnf) project or visit [nerdfonts](https://www.nerdfonts.com/) site.
+To get your nerd font check out [getNF](https://github.com/ronniedroid/getnf) project or visit [NerdFonts](https://www.nerdfonts.com/) site.
 
 ## Install
 
