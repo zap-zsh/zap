@@ -23,7 +23,6 @@ function plug() {
     fi
 
     local plugin="$1"
-    _try_source $plugin && return
     local git_ref="$2"
     local plugin_name=${plugin:t}
     local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
