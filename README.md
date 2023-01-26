@@ -38,6 +38,11 @@
 
 </div>
 
+## Prerequisites
+
+- [zsh](https://www.zsh.org/)
+- a nerd font (optional), to get your nerd font check out [getnf](https://github.com/ronniedroid/getnf) project
+
 ## Install
 
 ```sh
