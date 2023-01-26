@@ -17,7 +17,7 @@ function plug() {
     }
 
     # If the directory exists, then local source only
-    if [ -d $(dirname "$1") ]; then
+    if [ -d "${1:h}" ]; then
         [[ -f "$1" ]] && source "$1"
         return 0
     fi
