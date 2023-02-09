@@ -23,7 +23,7 @@ function plug() {
         local plugin_dir="${plugin_absolute}"
     else
         # If the basename directory exists, then local source only
-        if [ -d "${1:A:h}" ]; then
+        if [ -d "${plugin_absolute:h}" ]; then
             [[ -f "${plugin_absolute}" ]] && source "${plugin_absolute}"
             return
         fi
