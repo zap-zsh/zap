@@ -47,13 +47,13 @@ To get your nerd font check out [getNF](https://github.com/ronniedroid/getnf) pr
 
 ## Install
 
-```sh
+```zsh
 zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
 ```
 
 To install a specific branch of Zap, you can pass the `--branch` flag to the `install.zsh` script, followed by the name of the branch you want to install:
 
-```sh
+```zsh
 zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-0.1
 ```
 
@@ -63,7 +63,11 @@ zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) 
 
 Add the following to your `.zshrc`
 
-```sh
+```zsh
+# Example sourcing of files
+plug "$HOME/.config/zsh/aliases.zsh"
+plug "$HOME/.config/zsh/exports.zsh"
+
 # Example install plugins
 plug "zap-zsh/supercharge"
 plug "zsh-users/zsh-autosuggestions"
@@ -80,7 +84,7 @@ plug "esc/conda-zsh-completion"
 
 You can also use `Zap` to source your custom files, like:
 
-```sh
+```zsh
 plug "${ZDOTDIR:-$HOME}/aliases"
 ```
 
@@ -96,19 +100,19 @@ Zap provided commands for updating and cleaning up plugins
 
 - To update plugins or Zap:
 
-  ```sh
+  ```zsh
   zap update
   ```
 
 - To remove plugins you are no longer using:
 
-  ```sh
+  ```zsh
   zap clean
   ```
 
 ## Uninstall
 
-```sh
+```zsh
 rm -rf ~/.local/share/zap
 ```
 
