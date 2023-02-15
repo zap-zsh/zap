@@ -20,6 +20,7 @@ function plug() {
     local plugin_absolute="${1:A}"
     if [ -d "${plugin_absolute}" ]; then
         local plugin="${plugin_absolute}"
+        local plugin_name="${plugin:t}"
         local plugin_dir="${plugin_absolute}"
     else
         # If the basename directory exists, then local source only
@@ -29,11 +30,11 @@ function plug() {
         fi
 
         local plugin="$1"
+        local plugin_name="${plugin:t}"
         local plugin_dir="$ZAP_PLUGIN_DIR/$plugin_name"
     fi
 
     local git_ref="$2"
-    local plugin_name="${plugin:t}"
     if [ ! -d "$plugin_dir" ]; then
         echo "🔌 Zap is installing $plugin_name..."
         git clone "https://github.com/${plugin}.git" "$plugin_dir" > /dev/null 2>&1 || { echo -e "\e[1A\e[K❌ Failed to clone $plugin_name"; return 12 }
