@@ -51,6 +51,7 @@ function _pull() {
 
 function _zap_clean() {
     typeset -a unused_plugins=()
+    echo "⚡ Zap - Clean\n"
     for plugin in "$ZAP_PLUGIN_DIR"/*; do
         [[ "$ZAP_INSTALLED_PLUGINS[(Ie)${plugin:t}]" -eq 0 ]] && unused_plugins+=("${plugin:t}")
     done
@@ -62,11 +63,19 @@ function _zap_clean() {
     done
 }
 
+function _zap_list() {
+    local _plugin
+    echo "⚡ Zap - List\n"
+    for _plugin in ${ZAP_INSTALLED_PLUGINS[@]}; do
+        printf '%4s  🔌 %s\n' $ZAP_INSTALLED_PLUGINS[(Ie)$_plugin] $_plugin
+    done
+}
+
 function _zap_update() {
     local _plugin _plug
-    echo "0  ⚡ Zap"
+    echo "⚡ Zap - Update\n\n   0  ⚡ Zap"
     for _plugin in ${ZAP_INSTALLED_PLUGINS[@]}; do
-        echo "$ZAP_INSTALLED_PLUGINS[(Ie)$_plugin]  🔌 $_plugin"
+        printf '%4s  🔌 %s\n' $ZAP_INSTALLED_PLUGINS[(Ie)$_plugin] $_plugin
     done
     echo -n "\n🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: " && read _plugin
     case $_plugin in
@@ -86,11 +95,14 @@ function _zap_update() {
 }
 
 function _zap_help() {
-    echo "Usage: zap <command>
+    echo "⚡ Zap - Help
+
+Usage: zap <command>
 
 COMMANDS:
     clean	Remove unused plugins
     help	Show this help message
+    list	List plugins
     update	Update plugins
     version	Show version information"
 }
@@ -105,6 +117,7 @@ function zap() {
     typeset -A subcmds=(
         clean "_zap_clean"
         help "_zap_help"
+        list "_zap_list"
         update "_zap_update"
         version "_zap_version"
     )
