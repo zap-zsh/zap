@@ -118,13 +118,7 @@ rm -rf ~/.local/share/zap
 
 ## Notes
 
-Will only work with plugins that are named conventionally, this means that the plugin file is the same name as the repository with the following extensions:
-
-- `.plugin.zsh`
-- `.zsh`
-- `.zsh-theme`
-
-For example: [vim](https://github.com/zap-zsh/vim)
+For sourcing local files use `$HOME` instead of `~` when giving a full path to the file.
 
 <!----------------------------------------------------------------------------->
 
