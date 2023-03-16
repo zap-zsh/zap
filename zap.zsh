@@ -15,7 +15,7 @@ function plug() {
             [[ -e "$plugin_dir/${plugin_name#zsh-}$ext" ]] && source "$plugin_dir/${plugin_name#zsh-}$ext" && return 0
             # If the plugin file has a different name than $plugin_name
             plugin_filename=$(command ls $plugin_dir | grep $ext)
-            [[ -n $plugin_filename ]] && [[ $(echo $plugin_filename | wc -l) == 1 ]] && source "$plugin_dir/$plugin_filename" && return 0
+            [[ -n $plugin_filename ]] && [[ $(echo $plugin_filename | wc -l) -eq 1 ]] && source "$plugin_dir/$plugin_filename" && return 0
         done
     }
 
