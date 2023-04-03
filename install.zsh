@@ -50,6 +50,6 @@ main() {
     return 0
 }
 
-main "$@"
+main $@
 
 # vim: ft=zsh ts=4 et
