@@ -47,6 +47,8 @@ main() {
     git clone -b "${BRANCH:-master}" https://github.com/zap-zsh/zap.git "$ZAP_DIR" > /dev/null 2>&1 || { echo "❌ Failed to install Zap" && return 2 }
 
     echo " Zapped"
+    echo "Run: source $ZSHRC for changes to take effect"
+    echo "Or open a new terminal window"
     return 0
 }
 
