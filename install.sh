@@ -53,6 +53,5 @@ main() {
 main $@
 
 source ~/.zshrc
-source ~/.local/share/zap/plugins/zap-prompt/zap-prompt.zsh-theme
 
 # vim: ft=zsh ts=4 et
