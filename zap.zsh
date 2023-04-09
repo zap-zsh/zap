@@ -92,7 +92,7 @@ function _zap_update() {
                 _pull "$ZAP_PLUGIN_DIR/$_plug"
             done ;;
         *)
-: ;;
+            : ;;
     esac
     [[ $ZAP_CLEAN_ON_UPDATE == true ]] && _zap_clean || return 0
 }
