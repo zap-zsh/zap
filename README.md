@@ -64,34 +64,40 @@ zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) 
 Add the following to your `.zshrc`
 
 ```zsh
-# Example sourcing of files
-plug "$HOME/.config/zsh/aliases.zsh"
-plug "$HOME/.config/zsh/exports.zsh"
-
-# Example install plugins
+# Example install of plugins
 plug "zap-zsh/supercharge"
 plug "zsh-users/zsh-autosuggestions"
 
-#Example plugin pinned to specifc commit or branch, just pass the git reference
+# Example install of a plugin pinned to specifc commit or branch, just pass the git reference
 plug "zsh-users/zsh-syntax-highlighting" "122dc46"
 
-# Example theme
+# Example install of a theme
 plug "zap-zsh/zap-prompt"
 
-# Example install completion
+# Example install of a zsh completion
 plug "esc/conda-zsh-completion"
 ```
 
-You can also use `Zap` to source your custom files, like:
+You can also use `Zap` to install custom plugins or source custom files present on your local filesystem. A file descriptor which points to a directory is treated as a plugin, versus a regular file. For example:
 
 ```zsh
-plug "${ZDOTDIR:-$HOME}/aliases"
+# Example install of a local plugin
+plug "$HOME/plugins/my-custom-prompt"
+
+# Example sourcing of local files
+plug "$HOME/.config/zsh/aliases.zsh"
+plug "$HOME/.config/zsh/exports.zsh"
 ```
 
-:warning:_In this case the file has to be present in your system and the argument passed to `plug` has to be a file descriptor that points to a regular file. This means you actually need to specify the path to the file (absolute or using environment variables like shown above) and, if the file has an extension you must type it._<br>
-For more information about that, take a look at [this issue](https://github.com/zap-zsh/zap/issues/88)
+By default `Zap` when installing a plugin will clone a GitHub repository using a HTTPS web URL, if you require to be able to install from a private GitHub repository you can provide a different URL prefix to be used. For example, using a password-protected SSH key:
 
-Is possible to call `plug` in any interactive shell session to source a file or to download and source a plugin for that particular session.<br>
+```zsh
+# Example git clone using an SSH key
+export ZAP_GITHUB_PREFIX="git@"
+plug "zap-zsh/private-repo"
+```
+
+It is possible to call `plug` in any interactive shell session to source a file or to download and source a plugin for that particular session.<br>
 :warning: If you call `plug` outside your `.zshrc` file, the plugin you sourced will not be sourced at the next shell reload.
 
 ## Commands
@@ -102,6 +108,12 @@ Zap provided commands for updating and cleaning up plugins
 
   ```zsh
   zap update
+  ```
+
+- To list all plugins you are using:
+
+  ```zsh
+  zap list
   ```
 
 - To remove plugins you are no longer using:
