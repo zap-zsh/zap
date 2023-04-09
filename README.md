@@ -97,7 +97,8 @@ export ZAP_GITHUB_PREFIX="git@"
 plug "zap-zsh/private-repo"
 ```
 
-It is possible to call `plug` in any interactive shell session to source a file or to download and source a plugin for that particular session.<br>
+It is possible to call `plug` in any interactive shell session to source a file or to download and source a plugin for that particular session.
+
 :warning: If you call `plug` outside your `.zshrc` file, the plugin you sourced will not be sourced at the next shell reload.
 
 ## Commands
