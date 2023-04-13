@@ -9,9 +9,9 @@ main() {
     local ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
 
     # Check if the current .zshrc file exists
-    if [ -f "$HOME/.zshrc" ]; then
+    if [ -f "$ZSHRC" ]; then
         # Move the current .zshrc file to the new filename
-        mv "$HOME/.zshrc" "$HOME/$NEW_ZSHRC"
+        mv "$ZSHRC" "$HOME/$NEW_ZSHRC"
         echo "Moved .zshrc to $NEW_ZSHRC"
     else
         echo "No .zshrc file found, creating a new one..."
@@ -50,9 +50,12 @@ main() {
     # TODO: find a way for changes to take effect without user intervention
     echo "Run: source $ZSHRC for changes to take effect"
     echo "Or open a new terminal window"
+
     return 0
 }
 
 main $@
+
+[[ $? -eq 0 ]] && exec zsh || return
 
 # vim: ft=zsh ts=4 et
