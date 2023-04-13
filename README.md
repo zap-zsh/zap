@@ -48,13 +48,7 @@ To get your nerd font check out [getNF](https://github.com/ronniedroid/getnf) pr
 ## Install
 
 ```zsh
-zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
-```
-
-To install a specific branch of Zap, you can pass the `--branch` flag to the `install.zsh` script, followed by the name of the branch you want to install:
-
-```zsh
-zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-0.1
+zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-v1
 ```
 
 **Zap works on Linux, macOS, Windows (within WSL), Android (within Termux)**
