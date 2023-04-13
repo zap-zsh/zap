@@ -17,7 +17,17 @@ main() {
         echo "No .zshrc file found, creating a new one..."
     fi
 
-    cp "$ZAP_DIR"/example_zshrc "$ZSHRC"
+    # Check if .zshrc file exists, create it if not
+    if [ ! -f "$ZSHRC" ]; then
+        touch "$ZSHRC"
+    fi
+
+    echo "# Created by Zap installer" >> "$ZSHRC"
+    echo '[ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"' >> "$ZSHRC"
+    echo 'plug "zsh-users/zsh-autosuggestions"' >> "$ZSHRC"
+    echo 'plug "zap-zsh/supercharge"' >> "$ZSHRC"
+    echo 'plug "zap-zsh/zap-prompt"' >> "$ZSHRC"
+    echo 'plug "zsh-users/zsh-syntax-highlighting"' >> "$ZSHRC"
 
     [[ $1 == "--branch" || $1 == "-b" && -n $2 ]] && local BRANCH="$2"
 
