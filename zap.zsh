@@ -9,14 +9,11 @@ fpath+="$ZAP_DIR/completion"
 function plug() {
 
     function _try_source() {
-        typeset -a extensions=(".plugin.zsh" ".zsh-theme" ".zsh")
-        for ext in "${extensions[@]}"; do
-            [[ -e "$plugin_dir/$plugin_name$ext" ]] && source "$plugin_dir/$plugin_name$ext" && return 0
-            [[ -e "$plugin_dir/${plugin_name#zsh-}$ext" ]] && source "$plugin_dir/${plugin_name#zsh-}$ext" && return 0
-            # If the plugin file has a different name than $plugin_name
-            plugin_filename=$(command ls $plugin_dir | grep $ext)
-            [[ -n $plugin_filename ]] && [[ $(echo $plugin_filename | wc -l) -eq 1 ]] && source "$plugin_dir/$plugin_filename" && return 0
-        done
+        local -a initfiles=(
+            $plugin_dir/${plugin_name}.{plugin.,}{z,}sh{-theme,}(N)
+            $plugin_dir/*.{plugin.,}{z,}sh{-theme,}(N)
+        )
+        (( $#initfiles )) && source $initfiles[1]
     }
 
     # If the absolute is a directory then source as a local plugin
