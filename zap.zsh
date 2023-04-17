@@ -9,7 +9,7 @@ fpath+="$ZAP_DIR/completion"
 function plug() {
 
     function _try_source() {
-        typeset -a extensions=(".plugin.zsh" ".zsh-theme" ".zsh")
+        typeset -a extensions=(".plugin.zsh" ".zsh-theme" ".zsh" ".sh")
         for ext in "${extensions[@]}"; do
             [[ -e "$plugin_dir/$plugin_name$ext" ]] && source "$plugin_dir/$plugin_name$ext" && return 0
             [[ -e "$plugin_dir/${plugin_name#zsh-}$ext" ]] && source "$plugin_dir/${plugin_name#zsh-}$ext" && return 0
