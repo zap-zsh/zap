@@ -37,7 +37,7 @@ function plug() {
     local git_ref="$2"
     if [ ! -d "$plugin_dir" ]; then
         echo "🔌 Zap is installing $plugin_name..."
-        git clone "${ZAP_GITHUB_PREFIX:-"https://"}github.com/${plugin}.git" "$plugin_dir" > /dev/null 2>&1 || { echo -e "\e[1A\e[K❌ Failed to clone $plugin_name"; return 12 }
+        git clone --depth 1 "${ZAP_GITHUB_PREFIX:-"https://"}github.com/${plugin}.git" "$plugin_dir" > /dev/null 2>&1 || { echo -e "\e[1A\e[K❌ Failed to clone $plugin_name"; return 12 }
         echo -e "\e[1A\e[K⚡ Zap installed $plugin_name"
     fi
     [[ -n "$git_ref" ]] && { git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1 || { echo "❌ Failed to checkout $git_ref"; return 13 }}
