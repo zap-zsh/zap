@@ -72,7 +72,7 @@ function _zap_list() {
 }
 
 function _zap_update() {
-    
+
     local _plugin _plug _status
 
     function _check() {
