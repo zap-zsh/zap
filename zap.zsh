@@ -79,10 +79,11 @@ function _zap_update() {
 
         local _REMOTE _LOCAL
         git -C "$1" remote update &> /dev/null
-        _REMOTE=$(git -C "$1" rev-parse --quiet --short "origin/$(git -C "$1" rev-parse --quiet --abbrev-ref HEAD)")
-        _LOCAL=$(git -C "$1" rev-parse --short $(git -C "$1" rev-parse --abbrev-ref HEAD))
-        [[ -z $_REMOTE ]] && _status='\033[1;34mLocal ahead remote\033[0m' || {
-            [[ $_REMOTE = $_LOCAL ]] && _status='\033[1;32mUp to date\033[0m' || _status='\033[1;31mOut of date\033[0m'
+        _REMOTE=$(git -C "$1" rev-list --count "origin/$(git -C "$1" rev-parse --quiet --abbrev-ref HEAD)" 2&> /dev/null)
+        _LOCAL=$(git -C "$1" rev-list --count "$(git -C "$1" rev-parse --quiet --abbrev-ref HEAD)" 2&> /dev/null)
+        # _LOCAL=$(git -C "$1" rev-parse --short $(git -C "$1" rev-parse --abbrev-ref HEAD))
+        [[ $_REMOTE -lt $_LOCAL ]] && _status='\033[1;34mLocal ahead remote\033[0m' || {
+            [[ $_REMOTE -eq $_LOCAL ]] && _status='\033[1;32mUp to date\033[0m' || _status='\033[1;31mOut of date\033[0m'
         }
     }
 
