@@ -76,15 +76,11 @@ function _zap_update() {
     local _plugin _plug _status
 
     function _check() {
-
-        local _REMOTE _LOCAL
-        git -C "$1" remote update &> /dev/null
-        _REMOTE=$(git -C "$1" rev-list --count "origin/$(git -C "$1" rev-parse --quiet --abbrev-ref HEAD)" 2&> /dev/null)
-        _LOCAL=$(git -C "$1" rev-list --count "$(git -C "$1" rev-parse --quiet --abbrev-ref HEAD)" 2&> /dev/null)
-        # _LOCAL=$(git -C "$1" rev-parse --short $(git -C "$1" rev-parse --abbrev-ref HEAD))
-        [[ $_REMOTE -lt $_LOCAL ]] && _status='\033[1;34mLocal ahead remote\033[0m' || {
-            [[ $_REMOTE -eq $_LOCAL ]] && _status='\033[1;32mUp to date\033[0m' || _status='\033[1;31mOut of date\033[0m'
-        }
+        if [[ -z $(git -C "$1" remote update &> /dev/null && git -C "$1" status -uno -s 2&> /dev/null) ]]; then
+            _status='\033[1;32mUp to date\033[0m'
+        else
+            _status='\033[1;31mOut of date\033[0m'
+        fi
     }
 
     echo "⚡ Zap - Update\n"
