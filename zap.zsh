@@ -76,7 +76,7 @@ function _zap_update() {
     local _plugin _plug _status
 
     function _check() {
-        if [[ -z $(git -C "$1" remote update &> /dev/null && git -C "$1" status -uno -s 2&> /dev/null) ]]; then
+        if [[ -z $(git -C "$1" remote update && git -C "$1" status -uno | grep "branch is up to date") ]]; then
             _status='\033[1;32mUp to date\033[0m'
         else
             _status='\033[1;31mOut of date\033[0m'
