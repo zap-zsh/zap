@@ -54,6 +54,6 @@ main() {
 
 main $@
 
-[[ $? -eq 0 ]] && . "$ZSHRC" || return
+[[ $? -eq 0 ]] && source "$ZSHRC" || return
 
 # vim: ft=zsh ts=4 et
