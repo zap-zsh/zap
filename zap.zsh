@@ -77,7 +77,7 @@ function _zap_update() {
     for _plugin in ${ZAP_INSTALLED_PLUGINS[@]}; do
         printf '%4s  🔌 %s\n' $ZAP_INSTALLED_PLUGINS[(Ie)$_plugin] $_plugin
     done
-    echo -n "\n🔌 Plugin Number | (a) All Plugins | (0) ⚡ Zap Itself: " && read _plugin
+    echo -n "\n  🔌 Plugin Number | (0) ⚡ Zap Itself | (a) All Plugins | (⏎) Abort: " && read _plugin
     case $_plugin in
         [[:digit:]]*)
             [[ $_plugin -gt ${#ZAP_INSTALLED_PLUGINS[@]} ]] && { echo "❌ Invalid option" && return 1 }
@@ -85,6 +85,7 @@ function _zap_update() {
                 git -C "$ZAP_DIR" pull &> /dev/null && { echo -e "\e[1A\e[K⚡ Zap updated!"; return 0 } || { echo -e "\e[1A\e[K❌ Failed to pull"; return 14 }
             } || { _pull "$ZAP_PLUGIN_DIR/$ZAP_INSTALLED_PLUGINS[$_plugin]" } ;;
         'a'|'A')
+            echo "\nUpdating All Plugins\n"
             for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do
                 _pull "$ZAP_PLUGIN_DIR/$_plug"
             done ;;
