@@ -76,11 +76,19 @@ function _zap_update() {
     local _plugin _plug _status
 
     function _check() {
-        if [[ -z $(git -C "$1" remote update && git -C "$1" status -uno | grep "branch is up to date") ]]; then
-            _status='\033[1;32mUp to date\033[0m'
-        else
-            _status='\033[1;31mOut of date\033[0m'
-        fi
+        git -C "$1" remote update
+        case $(git -C "$1" status -uno | grep -Eo '(haed|behind|diverged|up to date)') in
+            haed)
+                _status='\033[1;34mLocal haed remote\033[0m' ;;
+            behind)
+                _status='\033[1;33mOut of date\033[0m' ;;
+            diverged)
+                _status='\033[1;31mDiverged state\033[0m' ;;
+            'up to date')
+                _status='\033[1;32mUp to date\033[0m' ;;
+            *)
+                _status='N/D' ;;
+        esac
     }
 
     echo "⚡ Zap - Update\n"
