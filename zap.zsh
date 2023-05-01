@@ -77,9 +77,9 @@ function _zap_update() {
 
     function _check() {
         git -C "$1" remote update
-        case $(git -C "$1" status -uno | grep -Eo '(haed|behind|diverged|up to date)') in
-            haed)
-                _status='\033[1;34mLocal haed remote\033[0m' ;;
+        case $(git -C "$1" status -uno | grep -Eo '(ahead|behind|diverged|up to date)') in
+            ahead)
+                _status='\033[1;34mLocal ahead remote\033[0m' ;;
             behind)
                 _status='\033[1;33mOut of date\033[0m' ;;
             diverged)
