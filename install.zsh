@@ -24,7 +24,7 @@ main() {
     # Check if the current .zshrc file exists
     if [ -f "$ZSHRC" ]; then
         # Move the current .zshrc file to the new filename
-        mv "$ZSHRC" "$HOME/$NEW_ZSHRC"
+        mv "$ZSHRC" "${ZSHRC:A:h}/$NEW_ZSHRC"
         echo "Moved .zshrc to $NEW_ZSHRC"
     else
         echo "No .zshrc file found, creating a new one..."
