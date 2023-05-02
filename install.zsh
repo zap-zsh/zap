@@ -2,9 +2,7 @@
 
 main() {
 
-    local DATE=$(date +%Y-%m-%d)
-    local ID=$(date +%s)
-    local NEW_ZSHRC=".zshrc_${DATE}_${ID}"
+    local BACKUP_SUFFIX="$(date +%Y-%m-%d)_$(date +%s)"
     local ZAP_DIR="$HOME/.local/share/zap"
     local ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
 
@@ -24,8 +22,8 @@ main() {
     # Check if the current .zshrc file exists
     if [ -f "$ZSHRC" ]; then
         # Move the current .zshrc file to the new filename
-        mv "$ZSHRC" "$HOME/$NEW_ZSHRC"
-        echo "Moved .zshrc to $NEW_ZSHRC"
+        mv "$ZSHRC" "${ZSHRC}_${BACKUP_SUFFIX}"
+        echo "Moved .zshrc to .zshrc_$BACKUP_SUFFIX"
     else
         echo "No .zshrc file found, creating a new one..."
     fi
