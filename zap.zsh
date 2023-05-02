@@ -72,10 +72,29 @@ function _zap_list() {
 }
 
 function _zap_update() {
-    local _plugin _plug
-    echo "⚡ Zap - Update\n\n   0  ⚡ Zap"
+
+    local _plugin _plug _status
+
+    function _check() {
+        git -C "$1" remote update &> /dev/null
+        case $(LANG=en_US git -C "$1" status -uno | grep -Eo '(ahead|behind|up to date)') in
+            ahead)
+                _status='\033[1;34mLocal ahead remote\033[0m' ;;
+            behind)
+                _status='\033[1;33mOut of date\033[0m' ;;
+            'up to date')
+                _status='\033[1;32mUp to date\033[0m' ;;
+            *)
+                _status='\033[1;31mDiverged state\033[0m' ;;
+        esac
+    }
+
+    echo "⚡ Zap - Update\n"
+    _check "$ZAP_DIR"
+    printf '   0 ⚡ Zap (%b)\n' "$_status"
     for _plugin in ${ZAP_INSTALLED_PLUGINS[@]}; do
-        printf '%4s  🔌 %s\n' $ZAP_INSTALLED_PLUGINS[(Ie)$_plugin] $_plugin
+        _check "$ZAP_PLUGIN_DIR/$_plugin"
+        printf '%4s 🔌 %s (%b)\n' $ZAP_INSTALLED_PLUGINS[(Ie)$_plugin] $_plugin $_status
     done
     echo -n "\n  🔌 Plugin Number | (0) ⚡ Zap Itself | (a) All Plugins | (⏎) Abort: " && read _plugin
     case $_plugin in
