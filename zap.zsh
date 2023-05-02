@@ -76,18 +76,16 @@ function _zap_update() {
     local _plugin _plug _status
 
     function _check() {
-        git -C "$1" remote update
-        case $(git -C "$1" status -uno | grep -Eo '(ahead|behind|diverged|up to date)') in
+        git -C "$1" remote update &> /dev/null
+        case $(LANG=en_US git -C "$1" status -uno | grep -Eo '(ahead|behind|up to date)') in
             ahead)
                 _status='\033[1;34mLocal ahead remote\033[0m' ;;
             behind)
                 _status='\033[1;33mOut of date\033[0m' ;;
-            diverged)
-                _status='\033[1;31mDiverged state\033[0m' ;;
             'up to date')
                 _status='\033[1;32mUp to date\033[0m' ;;
             *)
-                _status='N/D' ;;
+                _status='\033[1;31mDiverged state\033[0m' ;;
         esac
     }
 
