@@ -75,6 +75,14 @@ function _zap_update() {
 
     local _plugin _plug _status
 
+    if [[ "$1" == "-a" || "$1" == "--all" ]]; then
+        echo "\nUpdating All Plugins\n"
+        for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do
+            _pull "$ZAP_PLUGIN_DIR/$_plug"
+        done
+        return 0
+    fi
+
     function _check() {
         git -C "$1" remote update &> /dev/null
         case $(LANG=en_US git -C "$1" status -uno | grep -Eo '(ahead|behind|up to date)') in
@@ -120,11 +128,11 @@ function _zap_help() {
 Usage: zap <command>
 
 COMMANDS:
-    clean	Remove unused plugins
-    help	Show this help message
-    list	List plugins
-    update	Update plugins
-    version	Show version information"
+    clean                  Remove unused plugins
+    help                   Show this help message
+    list                   List plugins
+    update [-a, --all]     Update plugins
+    version                Show version information"
 }
 
 function _zap_version() {
@@ -144,7 +152,7 @@ function zap() {
         version "_zap_version"
     )
     emulate -L zsh
-    [[ -z "$subcmds[$1]" ]] && { _zap_help; return 1 } || ${subcmds[$1]}
+    [[ -z "$subcmds[$1]" ]] && { _zap_help; return 1 } || ${subcmds[$1]} $2
 }
 
 # vim: ft=zsh ts=4 et
@@ -155,3 +163,4 @@ function zap() {
 #   13: Failed to checkout
 #   14: Failed to pull
 #   15: Nothing to remove
+
