@@ -52,6 +52,6 @@ main() {
 
 main $@
 
-[[ $? -eq 0 ]] && source "$ZSHRC" || return
+[[ $? -eq 0 ]] && source "${ZDOTDIR:-$HOME}/.zshrc" || return
 
 # vim: ft=zsh ts=4 et
