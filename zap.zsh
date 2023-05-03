@@ -75,13 +75,7 @@ function _zap_update() {
 
     local _plugin _plug _status
 
-    if [[ "$1" == "-a" || "$1" == "--all" ]]; then
-        echo "\nUpdating All Plugins\n"
-        for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do
-            _pull "$ZAP_PLUGIN_DIR/$_plug"
-        done
-        return 0
-    fi
+    [[ "$1" == "-a" || "$1" == "--all" ]] && { echo "\nUpdating All Plugins\n"; for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do _pull "$ZAP_PLUGIN_DIR/$_plug"; done; return 0; }
 
     function _check() {
         git -C "$1" remote update &> /dev/null
