@@ -75,7 +75,8 @@ function _zap_update() {
 
     local _plugin _plug _status
 
-    [[ "$1" == "-a" || "$1" == "--all" ]] && { echo "\nUpdating All Plugins\n"; for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do _pull "$ZAP_PLUGIN_DIR/$_plug"; done; return 0; }
+    [[ $1 = "self" ]] && { _pull $ZAP_DIR; return }
+    [[ $1 == "all" ]] && { echo "\nUpdating All Plugins\n"; for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do _pull "$ZAP_PLUGIN_DIR/$_plug"; done; return 0; }
 
     function _check() {
         git -C "$1" remote update &> /dev/null
@@ -119,14 +120,17 @@ function _zap_update() {
 function _zap_help() {
     echo "⚡ Zap - Help
 
-Usage: zap <command>
+Usage: zap <command> [options]
 
 COMMANDS:
     clean                  Remove unused plugins
     help                   Show this help message
     list                   List plugins
-    update [-a, --all]     Update plugins
-    version                Show version information"
+    update                 Update plugins
+    version                Show version information
+
+OPTIONS:
+    all                    Update all out-of-date plugins (use with 'update' command)"
 }
 
 function _zap_version() {
@@ -157,4 +161,6 @@ function zap() {
 #   13: Failed to checkout
 #   14: Failed to pull
 #   15: Nothing to remove
+
+
 
