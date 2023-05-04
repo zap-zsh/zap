@@ -26,10 +26,6 @@ main() {
         echo "Moved .zshrc to .zshrc_$BACKUP_SUFFIX"
     else
         echo "No .zshrc file found, creating a new one..."
-    fi
-
-    # Check if .zshrc file exists, create it if not
-    if [ ! -f "$ZSHRC" ]; then
         touch "$ZSHRC"
     fi
 
