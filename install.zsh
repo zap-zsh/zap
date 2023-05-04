@@ -3,7 +3,7 @@
 main() {
 
     local BACKUP_SUFFIX="$(date +%Y-%m-%d)_$(date +%s)"
-    local ZAP_DIR="$HOME/.local/share/zap"
+    local ZAP_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zap"
     local ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
 
     # check if ZAP_DIR already exists
@@ -34,7 +34,7 @@ main() {
     fi
 
     echo "# Created by Zap installer" >> "$ZSHRC"
-    echo '[ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"' >> "$ZSHRC"
+    echo '[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh" ] && source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"' >> "$ZSHRC"
     echo 'plug "zsh-users/zsh-autosuggestions"' >> "$ZSHRC"
     echo 'plug "zap-zsh/supercharge"' >> "$ZSHRC"
     echo 'plug "zap-zsh/zap-prompt"' >> "$ZSHRC"

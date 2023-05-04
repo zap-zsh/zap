@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 export ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
-export ZAP_DIR="$HOME/.local/share/zap"
+export ZAP_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
 export -a ZAP_INSTALLED_PLUGINS=()
 fpath+="$ZAP_DIR/completion"
