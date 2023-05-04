@@ -130,7 +130,8 @@ COMMANDS:
     version                Show version information
 
 OPTIONS:
-    all                    Update all out-of-date plugins (use with 'update' command)"
+    update self            Update Zap itself
+    update all             Update all plugins"
 }
 
 function _zap_version() {
