@@ -1,0 +1,45 @@
+name: test-suite
+
+on:
+  pull_request:
+  push:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install ZSH
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install zsh
+      - name: ZSH lint per file
+        shell: zsh {0}
+        run: |
+          for file in ${{ github.workspace }}/**/*.zsh; do
+            echo "Now linting $file"...
+            zsh -n "$file"
+            echo "Success! 🎉"
+          done
+      - name: Init & tests
+        shell: zsh {0}
+        run: |
+          # Init
+          zsh ${{ github.workspace }}/install.zsh
+          source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
+          # Test env var
+          [[ -d "$ZAP_DIR" ]]
+          # Test plugin installation
+          plug "zap-zsh/supercharge"
+          git -C "${ZAP_DIR}/plugins/supercharge/" status || exit 1
