@@ -83,12 +83,20 @@ plug "$HOME/.config/zsh/aliases.zsh"
 plug "$HOME/.config/zsh/exports.zsh"
 ```
 
-By default `Zap` when installing a plugin will clone a GitHub repository using a HTTPS web URL, if you require to be able to install from a private GitHub repository you can provide a different URL prefix to be used. For example, using a password-protected SSH key:
+By default `Zap` when installing a plugin will clone a GitHub repository using a HTTPS web URL, if you require to be able to install from a private GitHub or from a different git server repository (for example GitLab) you can provide a different URL prefix to be used. For example, using a password-protected SSH key:
 
 ```zsh
-# Example git clone using an SSH key
-export ZAP_GITHUB_PREFIX="git@"
+# Your ZSHRC file
+...
+
+# Example globally set Zap to git clone using an SSH key
+export ZAP_GIT_PREFIX='git@github.com:'
 plug "zap-zsh/private-repo"
+
+# Example git clone using GitLab for a single plugin
+ZAP_GIT_PREFIX='https://gitlab.com/' plug "user/repo"
+
+...
 ```
 
 It is possible to call `plug` in any interactive shell session to source a file or to download and source a plugin for that particular session.
