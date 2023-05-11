@@ -135,6 +135,10 @@ rm -rf ~/.local/share/zap
 
 For sourcing local files use `$HOME` instead of `~` when giving a full path to the file.
 
+---
+
+![zap youtube video](https://www.youtube.com/watch?v=LhDMw6n3GI4)
+
 <!----------------------------------------------------------------------------->
 
 <div align="center">
