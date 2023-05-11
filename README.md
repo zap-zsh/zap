@@ -137,7 +137,7 @@ For sourcing local files use `$HOME` instead of `~` when giving a full path to t
 
 ---
 
-![zap youtube video](https://www.youtube.com/watch?v=LhDMw6n3GI4)
+[[zap thumbnail](https://user-images.githubusercontent.com/29136904/237558142-b6201b3f-bf85-4866-95f3-df275cc94759.png)](https://www.youtube.com/watch?v=LhDMw6n3GI4)
 
 <!----------------------------------------------------------------------------->
 
