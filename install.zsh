@@ -24,6 +24,12 @@ main() {
 
     git clone --depth 1 -b "${BRANCH:-master}" https://github.com/zap-zsh/zap.git "$ZAP_DIR" > /dev/null 2>&1 || { echo "❌ Failed to install Zap" && return 2 }
 
+    # Check the .zshrc template exists
+    if [ ! -f "$ZAP_DIR/templates/default-zshrc" ]; then
+        echo "Template .zshrc file was not found in Zap installation"
+        return 2
+    fi
+
     # Check if the current .zshrc file exists
     if [ -f "$ZSHRC" ]; then
         # Move the current .zshrc file to the new filename
@@ -34,11 +40,7 @@ main() {
         touch "$ZSHRC"
     fi
 
-    # Check the .zshrc template exists and write out to the .zshrc file
-    if [ ! -f "$ZAP_DIR/templates/default-zshrc" ]; then
-        echo "Template .zshrc file was not found in Zap installation"
-        return 2
-    fi
+    # Write out the .zshrc template to the .zshrc
     cat "$ZAP_DIR/templates/default-zshrc" >> "$ZSHRC"
 
     echo " Zapped"
