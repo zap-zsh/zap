@@ -123,15 +123,15 @@ function _zap_help() {
 Usage: zap <command> [options]
 
 COMMANDS:
-    clean                  Remove unused plugins
-    help                   Show this help message
-    list                   List plugins
-    update                 Update plugins
-    version                Show version information
+    clean          Remove unused plugins
+    help           Show this help message
+    list           List plugins
+    update         Update plugins
+    version        Show version information
 
 OPTIONS:
-    update self            Update Zap itself
-    update all             Update all plugins"
+    update self    Update Zap itself
+    update all     Update all plugins"
 }
 
 function _zap_version() {
@@ -162,6 +162,3 @@ function zap() {
 #   13: Failed to checkout
 #   14: Failed to pull
 #   15: Nothing to remove
-
-
-
