@@ -34,7 +34,11 @@ main() {
         touch "$ZSHRC"
     fi
 
-    # Write out the default template to the .zshrc file
+    # Check the .zshrc template exists and write out to the .zshrc file
+    if [ ! -f "$ZAP_DIR/templates/default-zshrc" ]; then
+        echo "Template .zshrc file was not found in Zap installation"
+        return 2
+    fi
     cat "$ZAP_DIR/templates/default-zshrc" >> "$ZSHRC"
 
     echo " Zapped"
