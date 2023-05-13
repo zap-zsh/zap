@@ -18,7 +18,7 @@ jobs:
           - ubuntu-latest
           - macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.5.2
       - name: Install ZSH
         if: ${{ runner.os == 'Linux' }}
         run: |
