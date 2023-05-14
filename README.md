@@ -122,13 +122,13 @@ Zap provided commands for updating and cleaning up plugins
 
 ## Uninstall
 
-To uninstall Zap, execute the following:
+To uninstall Zap, when currently active, execute the following:
 
 ```zsh
 rm -rf "$ZAP_DIR"
 ```
 
-or
+When not currently active, execute the following:
 
 ```zsh
 rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/zap"
