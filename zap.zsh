@@ -139,8 +139,9 @@ COMMANDS:
     version        Show version information
 
 OPTIONS:
-    update self    Update Zap itself
-    update all     Update all plugins"
+    update self            Update Zap itself
+    update plugins         Update all plugins
+    update all             Update Zap and all plugins"
 }
 
 function _zap_version() {
