@@ -75,8 +75,17 @@ function _zap_update() {
 
     local _plugin _plug _status
 
-    [[ $1 = "self" ]] && { _pull $ZAP_DIR; return }
-    [[ $1 == "all" ]] && { echo "\nUpdating All Plugins\n"; for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do _pull "$ZAP_PLUGIN_DIR/$_plug"; done; return }
+    [[ $1 == "all" || $1 == "self" ]] && {
+        _pull $ZAP_DIR
+        [[ $1 == "self" ]] && return
+    }
+    [[ $1 == "all" || $1 == "plugins" ]] && {
+        echo "\nUpdating All Plugins\n"
+        for _plug in ${ZAP_INSTALLED_PLUGINS[@]}; do
+            _pull "$ZAP_PLUGIN_DIR/$_plug"
+        done
+        return
+    }
 
     function _check() {
         git -C "$1" remote update &> /dev/null
