@@ -22,7 +22,7 @@ main() {
     # Get the branch of the Zap ZSH repository to clone
     [[ $1 == "--branch" || $1 == "-b" && -n $2 ]] && local BRANCH="$2"
 
-    git clone --depth 1 -b "${BRANCH:-master}" https://github.com/zap-zsh/zap.git "$ZAP_DIR" > /dev/null 2>&1 || { echo "❌ Failed to install Zap" && return 2 }
+    git clone -b "${BRANCH:-master}" https://github.com/zap-zsh/zap.git "$ZAP_DIR" > /dev/null 2>&1 || { echo "❌ Failed to install Zap" && return 2 }
 
     # Check the .zshrc template exists
     if [ ! -f "$ZAP_DIR/templates/default-zshrc" ]; then
