@@ -40,7 +40,8 @@ function plug() {
         git clone --depth 1 "${ZAP_GIT_PREFIX:-"https://github.com/"}${plugin}.git" "$plugin_dir" > /dev/null 2>&1 || { echo -e "\e[1A\e[K❌ Failed to clone $plugin_name"; return 12 }
         echo -e "\e[1A\e[K⚡ Zap installed $plugin_name"
     fi
-    [[ -n "$git_ref" ]] && { git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1 || { echo "❌ Failed to checkout $git_ref"; return 13 }}
+    [[ -n "$git_ref" ]] && { git -C "$plugin_dir" pull --unshallow > /dev/null 2>&1 || { echo "❌ Failed to unshallow pull"; return 13 }} && \
+        { git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1 || { echo "❌ Failed to checkout $git_ref"; return 13 }}
     _try_source && { ZAP_INSTALLED_PLUGINS+="$plugin_name" && return 0 } || echo "❌ $plugin_name not activated" && return 1
 }
 
