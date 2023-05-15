@@ -21,7 +21,7 @@ main() {
         {h,-help}=HELP \
         {k,-keep}=KEEP \
         {b,-branch}:=BRANCH ||
-        return 1
+    return 1
  
     [[ -z "$HELP" ]] || { print -l $OPTIONS_USAGE && return }
 
