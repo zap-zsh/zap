@@ -32,14 +32,29 @@ jobs:
             zsh -n "$file"
             echo "Success! 🎉"
           done
-      - name: Init & tests
+      - name: Install Test - No Branch - Master
         shell: zsh {0}
         run: |
+          # Ensure Zap not already installed
+          rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/zap"
           # Init
           zsh ${{ github.workspace }}/install.zsh
           source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
-          # Test env var
+          # Test Environment Variable
           [[ -d "$ZAP_DIR" ]]
-          # Test plugin installation
-          plug "zap-zsh/supercharge"
-          git -C "${ZAP_DIR}/plugins/supercharge/" status || exit 1
+          # Test Plugin Installation
+          plug "wintermi/zsh-lsd"
+          git -C "${ZAP_DIR}/plugins/zsh-lsd/" status || exit 1
+      - name: Install Test - Branch "release-v1"
+        shell: zsh {0}
+        run: |
+          # Ensure Zap not already installed
+          rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/zap"
+          # Init
+          zsh ${{ github.workspace }}/install.zsh --branch release-v1
+          source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
+          # Test Environment Variable
+          [[ -d "$ZAP_DIR" ]]
+          # Test Plugin Installation
+          plug "wintermi/zsh-lsd"
+          git -C "${ZAP_DIR}/plugins/zsh-lsd/" status || exit 1
