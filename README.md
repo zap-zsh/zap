@@ -106,7 +106,7 @@ Zap provided commands for updating and cleaning up plugins
 
   ```zsh
   zap update self # Update the Zap installation
-  zap update plugins # Update your specified plugins
+  zap update plugins # Update all your plugins but not Zap
   zap update all # Update both the Zap installation and its plugins
   ```
 
