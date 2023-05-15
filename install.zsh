@@ -22,7 +22,7 @@ main() {
         {k,-keep}=KEEP \
         {b,-branch}:=BRANCH ||
     return 1
- 
+
     [[ -z "$HELP" ]] || { print -l $OPTIONS_USAGE && return }
 
     local BACKUP_SUFFIX="$(date +%Y-%m-%d)_$(date +%s)"
