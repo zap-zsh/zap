@@ -38,8 +38,6 @@ jobs:
       - name: Install Test - branch "${{ matrix.branch }}"
         shell: zsh {0}
         run: |
-          # Ensure Zap not already installed
-          rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/zap"
           # Init
           zsh ${{ github.workspace }}/install.zsh --branch ${{ matrix.branch }}
           source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
