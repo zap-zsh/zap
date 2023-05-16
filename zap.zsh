@@ -17,7 +17,9 @@ function plug() {
     }
 
     # If the absolute is a directory then source as a local plugin
+    pushd -q "$ZAP_DIR"
     local plugin_absolute="${1:A}"
+    popd -q
     if [ -d "${plugin_absolute}" ]; then
         local plugin="${plugin_absolute}"
         local plugin_name="${plugin:t}"
