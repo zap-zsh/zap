@@ -46,5 +46,6 @@ jobs:
           # Test Environment Variable
           [[ -d "$ZAP_DIR" ]]
           # Test Plugin Installation
-          plug "zsh-users/zsh-syntax-highlighting"
-          git -C "${ZAP_DIR}/plugins/zsh-syntax-highlighting" status || exit 1
+          apt install lsd # needed for next steps
+          plug "wintermi/zsh-lsd"
+          git -C "${ZAP_DIR}/plugins/zsh-lsd/" status || exit 1
