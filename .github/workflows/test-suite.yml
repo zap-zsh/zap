@@ -17,6 +17,9 @@ jobs:
         os:
           - ubuntu-latest
           - macos-latest
+        branch:
+          - master
+          - release-v1
     steps:
       - uses: actions/checkout@v3.5.2
       - name: Install ZSH
@@ -32,29 +35,17 @@ jobs:
             zsh -n "$file"
             echo "Success! 🎉"
           done
-      - name: Install Test - No Branch - Master
+      - name: Install Test - branch "${{ matrix.branch }}"
         shell: zsh {0}
         run: |
-          # Ensure Zap not already installed
-          rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/zap"
+          # Reset Zap installation if, for any reason, it was cached
+          [[ -d "${XDG_DATA_HOME:-$HOME/.local/share}/zap" ]] && rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/zap" || :
           # Init
-          zsh ${{ github.workspace }}/install.zsh
+          zsh ${{ github.workspace }}/install.zsh --branch ${{ matrix.branch }}
           source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
           # Test Environment Variable
           [[ -d "$ZAP_DIR" ]]
           # Test Plugin Installation
-          plug "wintermi/zsh-lsd"
-          git -C "${ZAP_DIR}/plugins/zsh-lsd/" status || exit 1
-      - name: Install Test - Branch "release-v1"
-        shell: zsh {0}
-        run: |
-          # Ensure Zap not already installed
-          rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/zap"
-          # Init
-          zsh ${{ github.workspace }}/install.zsh --branch release-v1
-          source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
-          # Test Environment Variable
-          [[ -d "$ZAP_DIR" ]]
-          # Test Plugin Installation
+          apt install lsd # needed for next steps
           plug "wintermi/zsh-lsd"
           git -C "${ZAP_DIR}/plugins/zsh-lsd/" status || exit 1
