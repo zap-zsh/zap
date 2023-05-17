@@ -46,6 +46,6 @@ jobs:
           # Test Environment Variable
           [[ -d "$ZAP_DIR" ]]
           # Test Plugin Installation
-          apt install lsd # needed for next steps
+          sudo apt install lsd # needed for next steps
           plug "wintermi/zsh-lsd"
           git -C "${ZAP_DIR}/plugins/zsh-lsd/" status || exit 1
