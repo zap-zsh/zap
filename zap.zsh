@@ -96,13 +96,13 @@ function _zap_update() {
         git -C "$1" remote update &> /dev/null
         case $(LANG=en_US git -C "$1" status -uno | grep -Eo '(ahead|behind|up to date)') in
             ahead)
-                _status='\033[1;34mLocal ahead remote\033[0m' ;;
+                _status='\033[1;34mLocal ahead remote\033[0m ⬆️' ;;
             behind)
-                _status='\033[1;33mOut of date\033[0m' ;;
+                _status='\033[1;33mOut of date\033[0m ❌' ;;
             'up to date')
-                _status='\033[1;32mUp to date\033[0m' ;;
+                _status='\033[1;32mUp to date\033[0m ✅' ;;
             *)
-                _status='\033[1;31mDiverged state\033[0m' ;;
+                _status='\033[1;31mDiverged state\033[0m ↔️' ;;
         esac
     }
 
