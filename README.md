@@ -86,7 +86,7 @@ plug "$HOME/.config/zsh/exports.zsh"
 By default `Zap` when installing a plugin will clone a GitHub repository using a HTTPS web URL, if you require to be able to install from a private GitHub or from a different git server (for example GitLab) you can provide a different URL prefix to be used. For example:
 
 ```zsh
-# Example globally seting the prefix for Zap to git clone using an SSH key
+# Example globally setting the prefix for Zap to git clone using an SSH key
 export ZAP_GIT_PREFIX="git@github.com:"
 plug "zap-zsh/private-repo"
 
