@@ -43,7 +43,7 @@ main() {
     }
 
     # Clone the Zap Repository branch
-    git clone -b "$BRANCH[-1]" https://github.com/zap-zsh/zap.git "$ZAP_DIR" &> /dev/null || { echo "❌ Failed to install Zap" && return 2 }
+    git clone -b "$BRANCH[-1]" https://github.com/zap-zsh/zap.git "$ZAP_DIR" &> /dev/null || { echo "❌ Git is a dependency for zap. Please install git and try again." && return 2 }
 
     # Only modify .zshrc file if --keep flag not set
     if [[ -z "$KEEP" ]]; then
