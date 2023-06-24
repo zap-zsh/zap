@@ -17,7 +17,7 @@ main() {
     echo "⚡ Zap - Installer\n"
 
     zmodload zsh/zutil
-    zparseopts -D -F -K -- \
+    zparseopts -D -K -- \
         {h,-help}=HELP \
         {k,-keep}=KEEP \
         {b,-branch}:=BRANCH ||
