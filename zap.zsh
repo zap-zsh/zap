@@ -4,6 +4,7 @@ export ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
 export ZAP_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zap"
 export ZAP_PLUGIN_DIR="$ZAP_DIR/plugins"
 export -a ZAP_INSTALLED_PLUGINS=()
+fpath+="$ZAP_DIR/completion"
 
 function plug() {
 
@@ -20,6 +21,7 @@ function plug() {
             # Use the specified plugin_name
             local -a initfiles=(
                 $plugin_dir/${plugin_name}.{plugin.,}{z,}sh{-theme,}(N)
+                $plugin_dir/*.{plugin.,}{z,}sh{-theme,}(N)
             )
             (( $#initfiles )) && source $initfiles[1]
         fi
