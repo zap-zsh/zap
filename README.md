@@ -82,7 +82,7 @@ plug "$HOME/plugins/my-custom-prompt"
 plug "$HOME/.config/zsh/aliases.zsh"
 plug "$HOME/.config/zsh/exports.zsh"
 
-# Example install all local plugin in folder (must match pattern *.{plugin.,}{z,}sh{-theme,})
+# Example install all local plugin in a folder (must be an absolute path anding with *)
 plug "$HOME/plugins/*"
 ```
 
