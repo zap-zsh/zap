@@ -167,7 +167,7 @@ OPTIONS:
 function _zap_version() {
     local -Ar color=(BLUE "\033[0;34m" GREEN "\033[0;32m" RESET "\033[0m")
     local _branch=$(git -C "$ZAP_DIR" branch --show-current)
-    local _version=$(git -C "$ZAP_DIR" describe --tags `git -C "$ZAP_DIR" rev-list --tags --max-count=1`)
+    local _version=$(git -C "$ZAP_DIR" describe --abbrev=0 --tags)
     local _commit=$(git -C "$ZAP_DIR" log -1 --pretty="%h (%cr)")
     echo "⚡ Zap - Version\n\nVersion: ${color[GREEN]}${_branch}/${_version}${color[RESET]}\nCommit Hash: ${color[BLUE]}${_commit}${color[RESET]}"
 }
