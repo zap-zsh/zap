@@ -9,11 +9,22 @@ fpath+="$ZAP_DIR/completion"
 function plug() {
 
     function _try_source() {
-        local -a initfiles=(
-            $plugin_dir/${plugin_name}.{plugin.,}{z,}sh{-theme,}(N)
-            $plugin_dir/*.{plugin.,}{z,}sh{-theme,}(N)
-        )
-        (( $#initfiles )) && source $initfiles[1]
+        if [[ "$plugin_name" == "*" ]]; then
+            # Treat * as a glob pattern
+            local -a initfiles=(
+                $plugin_dir/*.{plugin.,}{z,}sh{-theme,}(N)
+            )
+            for file in "${initfiles[@]}"; do
+                [[ -f "$file" ]] && source "$file"
+            done
+        else
+            # Use the specified plugin_name
+            local -a initfiles=(
+                $plugin_dir/${plugin_name}.{plugin.,}{z,}sh{-theme,}(N)
+                $plugin_dir/*.{plugin.,}{z,}sh{-theme,}(N)
+            )
+            (( $#initfiles )) && source $initfiles[1]
+        fi
     }
 
     # If the absolute is a directory then source as a local plugin
@@ -24,6 +35,9 @@ function plug() {
         local plugin="${plugin_absolute}"
         local plugin_name="${plugin:t}"
         local plugin_dir="${plugin_absolute}"
+    elif [ "${plugin_absolute:t}" = "*" ]; then
+        local plugin_name="${plugin_absolute:t}"
+        local plugin_dir="${plugin_absolute:h}"
     else
         # If the basename directory exists, then local source only
         if [ -d "${plugin_absolute:h}" ]; then

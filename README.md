@@ -81,6 +81,9 @@ plug "$HOME/plugins/my-custom-prompt"
 # Example sourcing of local files
 plug "$HOME/.config/zsh/aliases.zsh"
 plug "$HOME/.config/zsh/exports.zsh"
+
+# Example install all local plugin in a folder (must be an absolute path anding with *)
+plug "$HOME/plugins/*"
 ```
 
 By default `Zap` when installing a plugin will clone a GitHub repository using a HTTPS web URL, if you require to be able to install from a private GitHub or from a different git server (for example GitLab) you can provide a different URL prefix to be used. For example:
