@@ -43,6 +43,7 @@ function plug() {
         echo -e "\e[1A\e[K⚡ Zap installed $plugin_name"
     fi
     [[ -n "$git_ref" ]] && {
+        git -C "$plugin_dir" remote set-branches origin '*' > /dev/null 2>&1
         git -C "$plugin_dir" pull --unshallow > /dev/null 2>&1
         git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1 || { echo "❌ Failed to checkout $git_ref"; return 13 }
     }
