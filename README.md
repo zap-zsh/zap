@@ -51,6 +51,9 @@ To get your nerd font check out [getNF](https://github.com/ronniedroid/getnf) pr
 zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-v1
 ```
 
+> [!TIP]  
+> If you wish to keep your current `.zshrc` file, you may add the `-k or --keep` argument when executing the install script.
+
 **Zap works on Linux, macOS, Windows (within WSL), Android (within Termux)**
 
 ## Example usage
