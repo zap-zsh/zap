@@ -73,7 +73,7 @@ main() {
     return 0
 }
 
-main $@
+main "$@"
 
 [[ $? -eq 0 ]] && source "${ZDOTDIR:-$HOME}/.zshrc" || return
 
