@@ -8,6 +8,37 @@ fpath+="$ZAP_DIR/completion"
 
 function plug() {
 
+    function print_elapsed() {
+        if [[ -v zap_print_times && -v _zap_timer ]]; then
+            local now=$(( EPOCHREALTIME * 1000 ))
+            local d_ms=$(( int(now - _zap_timer) ))
+            local d_s=$((d_ms / 1000))
+            local ms=$((d_ms % 1000))
+            local s=$((d_s % 60))
+            local m=$(((d_s / 60) % 60))
+            local h=$((d_s / 3600))
+
+            local elapsed
+            if ((h > 0)); then
+                elapsed=${h}h${m}m
+            elif ((m > 0)); then
+                elapsed=${m}m${s}s
+            elif ((s >= 10)); then
+                elapsed=${s}.$((ms / 100))s
+            elif ((s > 0)); then
+                elapsed=${s}.$((ms / 10))s
+            else
+                elapsed=${ms}ms
+            fi
+            if [[ -v plugin_name ]]; then
+                echo "Loading $plugin_name, Execution time: $elapsed"
+            else
+                echo "Loading $plugin_absolute, Execution time: $elapsed"
+            fi
+            unset _zap_timer
+        fi
+    }
+
     function _try_source() {
         if [[ "$plugin_name" == "*" ]]; then
             # Treat * as a glob pattern
@@ -27,6 +58,9 @@ function plug() {
         fi
     }
 
+    # Start timer for tracking execution time (only when telemetry is enabled)
+    [[ -v zap_print_times ]] && typeset -g _zap_timer=$(( EPOCHREALTIME * 1000 ))
+
     # If the absolute is a directory then source as a local plugin
     pushd -q "$ZAP_DIR"
     local plugin_absolute="${1:A}"
@@ -42,6 +76,7 @@ function plug() {
         # If the basename directory exists, then local source only
         if [ -d "${plugin_absolute:h}" ]; then
             [[ -f "${plugin_absolute}" ]] && source "${plugin_absolute}"
+            print_elapsed
             return
         fi
 
@@ -61,7 +96,15 @@ function plug() {
         git -C "$plugin_dir" pull --unshallow > /dev/null 2>&1
         git -C "$plugin_dir" checkout "$git_ref" > /dev/null 2>&1 || { echo "❌ Failed to checkout $git_ref"; return 13 }
     }
-    _try_source && { ZAP_INSTALLED_PLUGINS+="$plugin_name" && return 0 } || echo "❌ $plugin_name not activated" && return 1
+    if _try_source; then
+        print_elapsed
+        ZAP_INSTALLED_PLUGINS+="$plugin_name"
+        return 0
+    else
+        print_elapsed
+        echo "❌ $plugin_name not activated"
+        return 1
+    fi
 }
 
 function _pull() {

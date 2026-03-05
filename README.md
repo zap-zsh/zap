@@ -141,6 +141,8 @@ When not currently active, execute the following:
 ```zsh
 rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/zap"
 ```
+## TROUBLESHOOTING
+If you are attempting to troubleshoot slow shell loading that may be due to slow plugins, add `export zap_print_times=1` to your zshrc file before you call `plug` and it will print out the load time for each plugin or sourced file.
 
 ## Notes
 
